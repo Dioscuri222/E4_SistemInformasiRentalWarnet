@@ -1,8 +1,6 @@
--- 1. Membuat Database Baru (Bisa diganti namanya sesuai keinginan Anda)
 CREATE DATABASE DBWarnet;
 GO
 
--- 2. Memerintahkan SQL Server untuk menggunakan database tersebut
 USE DBWarnet;
 GO
 
@@ -22,7 +20,7 @@ CREATE TABLE Pengguna_Staf (
 CREATE TABLE Tier_PC (
     id_tier INT IDENTITY(1,1) PRIMARY KEY,
     nama_tier VARCHAR(50) NOT NULL,
-    harga_per_jam INT NOT NULL -- Menggunakan INT karena Rupiah biasanya bulat (misal: 5000)
+    harga_per_jam INT NOT NULL 
 );
 
 -- Membuat Tabel Data Fisik Komputer
@@ -46,7 +44,7 @@ CREATE TABLE Transaksi_Pembelian (
     id_transaksi INT IDENTITY(1,1) PRIMARY KEY,
     id_user INT NOT NULL,
     id_tier INT NOT NULL,
-    tgl_transaksi DATETIME DEFAULT GETDATE(), -- Otomatis terisi waktu saat ini
+    tgl_transaksi DATETIME DEFAULT GETDATE(), 
     durasi_jam INT NOT NULL,
     total_bayar INT NOT NULL,
     
