@@ -54,7 +54,7 @@ namespace Sistem_Warnet
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-
+            ConnectDatabase();
         }
     }
 }
