@@ -29,22 +29,33 @@
         private void InitializeComponent()
         {
             this.btnLogin = new System.Windows.Forms.Button();
+            this.btnLogou = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
             // btnLogin
             // 
-            this.btnLogin.Location = new System.Drawing.Point(132, 273);
+            this.btnLogin.Location = new System.Drawing.Point(190, 273);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(102, 39);
             this.btnLogin.TabIndex = 0;
             this.btnLogin.Text = "Login";
             this.btnLogin.UseVisualStyleBackColor = true;
             // 
+            // btnLogou
+            // 
+            this.btnLogou.Location = new System.Drawing.Point(468, 273);
+            this.btnLogou.Name = "btnLogou";
+            this.btnLogou.Size = new System.Drawing.Size(102, 39);
+            this.btnLogou.TabIndex = 1;
+            this.btnLogou.Text = "Logout";
+            this.btnLogou.UseVisualStyleBackColor = true;
+            // 
             // Login_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btnLogou);
             this.Controls.Add(this.btnLogin);
             this.Name = "Login_Form";
             this.Text = "Login";
@@ -56,6 +67,7 @@
         #endregion
 
         private System.Windows.Forms.Button btnLogin;
+        private System.Windows.Forms.Button btnLogou;
     }
 }
 
