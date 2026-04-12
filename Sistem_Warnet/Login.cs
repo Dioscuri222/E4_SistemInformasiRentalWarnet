@@ -82,7 +82,7 @@ namespace Sistem_Warnet
 
         private void btnDisconnect_Click(object sender, EventArgs e)
         {
-
+            DisconnectDatabase();
         }
     }
 }
