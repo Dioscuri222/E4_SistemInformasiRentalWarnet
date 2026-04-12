@@ -29,7 +29,6 @@
         private void InitializeComponent()
         {
             this.btnLogin = new System.Windows.Forms.Button();
-            this.btnLogou = new System.Windows.Forms.Button();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.textBox1 = new System.Windows.Forms.TextBox();
@@ -40,21 +39,12 @@
             // 
             // btnLogin
             // 
-            this.btnLogin.Location = new System.Drawing.Point(190, 273);
+            this.btnLogin.Location = new System.Drawing.Point(343, 242);
             this.btnLogin.Name = "btnLogin";
             this.btnLogin.Size = new System.Drawing.Size(102, 39);
             this.btnLogin.TabIndex = 0;
             this.btnLogin.Text = "Login";
             this.btnLogin.UseVisualStyleBackColor = true;
-            // 
-            // btnLogou
-            // 
-            this.btnLogou.Location = new System.Drawing.Point(468, 273);
-            this.btnLogou.Name = "btnLogou";
-            this.btnLogou.Size = new System.Drawing.Size(102, 39);
-            this.btnLogou.TabIndex = 1;
-            this.btnLogou.Text = "Logout";
-            this.btnLogou.UseVisualStyleBackColor = true;
             // 
             // label1
             // 
@@ -118,7 +108,6 @@
             this.Controls.Add(this.textBox1);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Controls.Add(this.btnLogou);
             this.Controls.Add(this.btnLogin);
             this.Name = "Login_Form";
             this.Text = "Login";
@@ -131,7 +120,6 @@
         #endregion
 
         private System.Windows.Forms.Button btnLogin;
-        private System.Windows.Forms.Button btnLogou;
         private System.Windows.Forms.Label label1;
         private System.Windows.Forms.Label label2;
         private System.Windows.Forms.TextBox textBox1;
