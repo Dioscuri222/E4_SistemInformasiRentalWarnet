@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -14,7 +15,28 @@ namespace Sistem_Warnet
     public partial class Login_Form : Form
     {
         private readonly SqlConnection conn;
-        private readonly string connectionString = 
+        private readonly string connectionString =
+            "Data Source=FASYALTP\\FASYALTP;Initial Catalog=DBWarnet;Integrated Security=True";
+
+        private void ConnectDatabase()
+        {
+            try
+            {
+                if (conn.State == System.Data.ConnectionState.Closed)
+
+                {
+                    conn.Open();
+                }
+
+                MessageBox.Show("Koneksi berhasil!");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Koneksi gagal: " + ex.Message);
+            }
+
+        }
+
         public Login_Form()
         {
             InitializeComponent();
