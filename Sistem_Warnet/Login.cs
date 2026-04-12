@@ -73,7 +73,25 @@ namespace Sistem_Warnet
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            
+            string query = "SELECT role FROM Pengguna_Staf WHERE username=@user AND password=@pass";
+            SqlCommand cmd = new SqlCommand(query, conn);
+            cmd.Parameters.AddWithValue("@user", txtUsername.Text);
+            cmd.Parameters.AddWithValue("@pass", txtPassword.Text);
+
+            conn.Open();
+            SqlDataReader reader = cmd.ExecuteReader();
+
+            if (reader.Read())
+            {
+                Warnet_Form main = new Warnet_Form();
+                main.Show();
+                this.Hide();
+            }
+            else
+            {
+                MessageBox.Show("Login Gagal!");
+            }
+            reader.Close();
         }
 
         private void btnConnect_Click(object sender, EventArgs e)
@@ -85,5 +103,6 @@ namespace Sistem_Warnet
         {
             DisconnectDatabase();
         }
+
     }
 }
