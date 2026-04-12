@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -12,6 +13,8 @@ namespace Sistem_Warnet
 {
     public partial class Login_Form : Form
     {
+        private readonly SqlConnection conn;
+        private readonly string connectionString = 
         public Login_Form()
         {
             InitializeComponent();
@@ -23,6 +26,11 @@ namespace Sistem_Warnet
         }
 
         private void label1_Click(object sender, EventArgs e)
+        {
+
+        }
+
+        private void btnLogin_Click(object sender, EventArgs e)
         {
 
         }
