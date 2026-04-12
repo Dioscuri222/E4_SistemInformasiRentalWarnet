@@ -37,6 +37,24 @@ namespace Sistem_Warnet
 
         }
 
+        private void DisconnectDatabase()
+        {
+            try
+            {
+                if (conn.State == System.Data.ConnectionState.Open)
+                {
+                    conn.Close();
+                }
+
+                MessageBox.Show("Disconnect Database Berhasil!");
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Disconnect Database Gagal: " + ex.Message);
+            }
+
+        }
+
         public Login_Form()
         {
             InitializeComponent();
@@ -60,6 +78,11 @@ namespace Sistem_Warnet
         private void btnConnect_Click(object sender, EventArgs e)
         {
             ConnectDatabase();
+        }
+
+        private void btnDisconnect_Click(object sender, EventArgs e)
+        {
+
         }
     }
 }
