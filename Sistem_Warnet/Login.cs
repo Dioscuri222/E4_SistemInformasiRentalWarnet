@@ -58,6 +58,7 @@ namespace Sistem_Warnet
         public Login_Form()
         {
             InitializeComponent();
+            conn = new SqlConnection(connectionString);
         }
 
         private void Form1_Load(object sender, EventArgs e)
