@@ -37,28 +37,13 @@ namespace Sistem_Warnet
 
         }
 
-        private void DisconnectDatabase()
-        {
-            try
-            {
-                if (conn.State == System.Data.ConnectionState.Open)
-                {
-                    conn.Close();
-                }
-
-                MessageBox.Show("Disconnect Database Berhasil!");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Disconnect Database Gagal: " + ex.Message);
-            }
-
-        }
 
         public Login_Form()
         {
             InitializeComponent();
             conn = new SqlConnection(connectionString);
+
+            //txtPassword.UseSystemPasswordChar = true;
         }
 
         private void Form1_Load(object sender, EventArgs e)
@@ -78,7 +63,6 @@ namespace Sistem_Warnet
             cmd.Parameters.AddWithValue("@user", txtUsername.Text);
             cmd.Parameters.AddWithValue("@pass", txtPassword.Text);
 
-            conn.Open();
             SqlDataReader reader = cmd.ExecuteReader();
 
             if (reader.Read())
@@ -99,10 +83,6 @@ namespace Sistem_Warnet
             ConnectDatabase();
         }
 
-        private void btnDisconnect_Click(object sender, EventArgs e)
-        {
-            DisconnectDatabase();
-        }
 
     }
 }
