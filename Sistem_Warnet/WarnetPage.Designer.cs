@@ -41,8 +41,8 @@
             this.label4 = new System.Windows.Forms.Label();
             this.btnSearch = new System.Windows.Forms.Button();
             this.dgvDataPC = new System.Windows.Forms.DataGridView();
-            this.button1 = new System.Windows.Forms.Button();
             this.lblTotal = new System.Windows.Forms.Label();
+            this.btnTotal = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dgvDataPC)).BeginInit();
             this.SuspendLayout();
             // 
@@ -162,15 +162,6 @@
             this.dgvDataPC.Size = new System.Drawing.Size(311, 287);
             this.dgvDataPC.TabIndex = 12;
             // 
-            // button1
-            // 
-            this.button1.Location = new System.Drawing.Point(33, 326);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(188, 34);
-            this.button1.TabIndex = 13;
-            this.button1.Text = "Hitung Total Unit";
-            this.button1.UseVisualStyleBackColor = true;
-            // 
             // lblTotal
             // 
             this.lblTotal.AutoSize = true;
@@ -180,13 +171,23 @@
             this.lblTotal.TabIndex = 14;
             this.lblTotal.Text = "Total PC Terdaftar: ";
             // 
+            // btnTotal
+            // 
+            this.btnTotal.Location = new System.Drawing.Point(33, 336);
+            this.btnTotal.Name = "btnTotal";
+            this.btnTotal.Size = new System.Drawing.Size(155, 31);
+            this.btnTotal.TabIndex = 15;
+            this.btnTotal.Text = "Hitung Total Unit";
+            this.btnTotal.UseVisualStyleBackColor = true;
+            this.btnTotal.Click += new System.EventHandler(this.btnTotal_Click);
+            // 
             // Warnet_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btnTotal);
             this.Controls.Add(this.lblTotal);
-            this.Controls.Add(this.button1);
             this.Controls.Add(this.dgvDataPC);
             this.Controls.Add(this.btnSearch);
             this.Controls.Add(this.label4);
@@ -224,8 +225,8 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btnSearch;
         private System.Windows.Forms.DataGridView dgvDataPC;
-        private System.Windows.Forms.Button button1;
         private System.Windows.Forms.Label lblTotal;
+        private System.Windows.Forms.Button btnTotal;
     }
 }
 
