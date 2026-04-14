@@ -40,6 +40,10 @@
             this.txtPencarian = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.btnSearch = new System.Windows.Forms.Button();
+            this.dgvDataPC = new System.Windows.Forms.DataGridView();
+            this.button1 = new System.Windows.Forms.Button();
+            this.lblTotal = new System.Windows.Forms.Label();
+            ((System.ComponentModel.ISupportInitialize)(this.dgvDataPC)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -122,7 +126,7 @@
             // 
             // txtPencarian
             // 
-            this.txtPencarian.Location = new System.Drawing.Point(545, 49);
+            this.txtPencarian.Location = new System.Drawing.Point(474, 60);
             this.txtPencarian.Name = "txtPencarian";
             this.txtPencarian.Size = new System.Drawing.Size(170, 22);
             this.txtPencarian.TabIndex = 9;
@@ -130,7 +134,7 @@
             // label4
             // 
             this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(545, 27);
+            this.label4.Location = new System.Drawing.Point(474, 38);
             this.label4.Name = "label4";
             this.label4.Size = new System.Drawing.Size(68, 16);
             this.label4.TabIndex = 10;
@@ -139,18 +143,50 @@
             // 
             // btnSearch
             // 
-            this.btnSearch.Location = new System.Drawing.Point(721, 48);
+            this.btnSearch.Location = new System.Drawing.Point(650, 59);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(75, 23);
             this.btnSearch.TabIndex = 11;
             this.btnSearch.Text = "Cari";
             this.btnSearch.UseVisualStyleBackColor = true;
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
+            // 
+            // dgvDataPC
+            // 
+            this.dgvDataPC.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dgvDataPC.Location = new System.Drawing.Point(474, 99);
+            this.dgvDataPC.Name = "dgvDataPC";
+            this.dgvDataPC.RowHeadersWidth = 51;
+            this.dgvDataPC.RowTemplate.Height = 24;
+            this.dgvDataPC.Size = new System.Drawing.Size(311, 287);
+            this.dgvDataPC.TabIndex = 12;
+            // 
+            // button1
+            // 
+            this.button1.Location = new System.Drawing.Point(33, 326);
+            this.button1.Name = "button1";
+            this.button1.Size = new System.Drawing.Size(188, 34);
+            this.button1.TabIndex = 13;
+            this.button1.Text = "Hitung Total Unit";
+            this.button1.UseVisualStyleBackColor = true;
+            // 
+            // lblTotal
+            // 
+            this.lblTotal.AutoSize = true;
+            this.lblTotal.Location = new System.Drawing.Point(30, 370);
+            this.lblTotal.Name = "lblTotal";
+            this.lblTotal.Size = new System.Drawing.Size(123, 16);
+            this.lblTotal.TabIndex = 14;
+            this.lblTotal.Text = "Total PC Terdaftar: ";
             // 
             // Warnet_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.lblTotal);
+            this.Controls.Add(this.button1);
+            this.Controls.Add(this.dgvDataPC);
             this.Controls.Add(this.btnSearch);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.txtPencarian);
@@ -166,6 +202,7 @@
             this.Name = "Warnet_Form";
             this.Text = "Rental Warnet";
             this.Load += new System.EventHandler(this.Warnet_Form_Load);
+            ((System.ComponentModel.ISupportInitialize)(this.dgvDataPC)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -185,6 +222,9 @@
         private System.Windows.Forms.TextBox txtPencarian;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btnSearch;
+        private System.Windows.Forms.DataGridView dgvDataPC;
+        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Label lblTotal;
     }
 }
 
