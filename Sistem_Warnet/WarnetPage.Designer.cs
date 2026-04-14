@@ -28,6 +28,7 @@
         /// </summary>
         private void InitializeComponent()
         {
+            this.components = new System.ComponentModel.Container();
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.label3 = new System.Windows.Forms.Label();
@@ -40,10 +41,12 @@
             this.txtPencarian = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
             this.btnSearch = new System.Windows.Forms.Button();
-            this.dgvDataPC = new System.Windows.Forms.DataGridView();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
             this.lblTotal = new System.Windows.Forms.Label();
             this.btnTotal = new System.Windows.Forms.Button();
-            ((System.ComponentModel.ISupportInitialize)(this.dgvDataPC)).BeginInit();
+            this.btnLoad = new System.Windows.Forms.Button();
+            this.contextMenuStrip1 = new System.Windows.Forms.ContextMenuStrip(this.components);
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // label1
@@ -80,6 +83,7 @@
             this.txtNoPC.Name = "txtNoPC";
             this.txtNoPC.Size = new System.Drawing.Size(121, 22);
             this.txtNoPC.TabIndex = 3;
+            this.txtNoPC.TextChanged += new System.EventHandler(this.txtNoPC_TextChanged);
             // 
             // cmbTier
             // 
@@ -88,6 +92,7 @@
             this.cmbTier.Name = "cmbTier";
             this.cmbTier.Size = new System.Drawing.Size(121, 24);
             this.cmbTier.TabIndex = 4;
+            this.cmbTier.SelectedIndexChanged += new System.EventHandler(this.cmbTier_SelectedIndexChanged);
             // 
             // cmbStatus
             // 
@@ -96,6 +101,7 @@
             this.cmbStatus.Name = "cmbStatus";
             this.cmbStatus.Size = new System.Drawing.Size(121, 24);
             this.cmbStatus.TabIndex = 5;
+            this.cmbStatus.SelectedIndexChanged += new System.EventHandler(this.cmbStatus_SelectedIndexChanged);
             // 
             // btnSimpan
             // 
@@ -115,6 +121,7 @@
             this.btnUpdate.TabIndex = 7;
             this.btnUpdate.Text = "Update";
             this.btnUpdate.UseVisualStyleBackColor = true;
+            this.btnUpdate.Click += new System.EventHandler(this.btnUpdate_Click);
             // 
             // btnDelete
             // 
@@ -145,7 +152,7 @@
             // 
             // btnSearch
             // 
-            this.btnSearch.Location = new System.Drawing.Point(650, 59);
+            this.btnSearch.Location = new System.Drawing.Point(650, 63);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(75, 23);
             this.btnSearch.TabIndex = 11;
@@ -153,16 +160,16 @@
             this.btnSearch.UseVisualStyleBackColor = true;
             this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
-            // dgvDataPC
+            // dataGridView1
             // 
-            this.dgvDataPC.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.dgvDataPC.Location = new System.Drawing.Point(474, 99);
-            this.dgvDataPC.Name = "dgvDataPC";
-            this.dgvDataPC.RowHeadersWidth = 51;
-            this.dgvDataPC.RowTemplate.Height = 24;
-            this.dgvDataPC.Size = new System.Drawing.Size(311, 287);
-            this.dgvDataPC.TabIndex = 12;
-            this.dgvDataPC.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDataPC_CellContentClick);
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Location = new System.Drawing.Point(364, 99);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.RowHeadersWidth = 51;
+            this.dataGridView1.RowTemplate.Height = 24;
+            this.dataGridView1.Size = new System.Drawing.Size(421, 287);
+            this.dataGridView1.TabIndex = 12;
+            this.dataGridView1.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDataPC_CellContentClick);
             // 
             // lblTotal
             // 
@@ -183,14 +190,31 @@
             this.btnTotal.UseVisualStyleBackColor = true;
             this.btnTotal.Click += new System.EventHandler(this.btnTotal_Click);
             // 
+            // btnLoad
+            // 
+            this.btnLoad.Location = new System.Drawing.Point(109, 227);
+            this.btnLoad.Name = "btnLoad";
+            this.btnLoad.Size = new System.Drawing.Size(93, 30);
+            this.btnLoad.TabIndex = 16;
+            this.btnLoad.Text = "Tampilkan";
+            this.btnLoad.UseVisualStyleBackColor = true;
+            this.btnLoad.Click += new System.EventHandler(this.btnConnect_Click);
+            // 
+            // contextMenuStrip1
+            // 
+            this.contextMenuStrip1.ImageScalingSize = new System.Drawing.Size(20, 20);
+            this.contextMenuStrip1.Name = "contextMenuStrip1";
+            this.contextMenuStrip1.Size = new System.Drawing.Size(61, 4);
+            // 
             // Warnet_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.btnLoad);
             this.Controls.Add(this.btnTotal);
             this.Controls.Add(this.lblTotal);
-            this.Controls.Add(this.dgvDataPC);
+            this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.btnSearch);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.txtPencarian);
@@ -206,7 +230,7 @@
             this.Name = "Warnet_Form";
             this.Text = "Rental Warnet";
             this.Load += new System.EventHandler(this.Warnet_Form_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.dgvDataPC)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -226,9 +250,11 @@
         private System.Windows.Forms.TextBox txtPencarian;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.Button btnSearch;
-        private System.Windows.Forms.DataGridView dgvDataPC;
+        private System.Windows.Forms.DataGridView dataGridView1;
         private System.Windows.Forms.Label lblTotal;
         private System.Windows.Forms.Button btnTotal;
+        private System.Windows.Forms.Button btnLoad;
+        private System.Windows.Forms.ContextMenuStrip contextMenuStrip1;
     }
 }
 
