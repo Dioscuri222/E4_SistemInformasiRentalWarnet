@@ -14,10 +14,11 @@ namespace Sistem_Warnet
     public partial class Warnet_Form : Form
     {
         private string connectionString = "Data Source=FASYALTP\\FASYALTP;Initial Catalog=DBWarnet;Integrated Security=True";
-        private SqlConnection connection;
+        private SqlConnection conn;
         public Warnet_Form()
         {
             InitializeComponent();
+            conn = new SqlConnection(connectionString);
         }
 
         private void Warnet_Form_Load(object sender, EventArgs e)
