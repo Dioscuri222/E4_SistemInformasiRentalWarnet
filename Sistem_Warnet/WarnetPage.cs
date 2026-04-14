@@ -111,5 +111,27 @@ namespace Sistem_Warnet
             }
 
         }
+
+        private void btnDelete_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show("Yakin mau menghapus data ini?", "Konfirmasi Hapus", MessageBoxButtons.YesNo);
+            if (result == DialogResult.Yes)
+            {
+                try
+                {
+                    string id = dgvDataPC.SelectedRows[0].Cells["id_pc"].Value.ToString();
+                    string query = "DELETE FROM Master_PC WHERE id_pc = @id";
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    cmd.Parameters.AddWithValue("@id", id);
+
+                    if (conn.State == ConnectionState.Closed) conn.Open();
+                    cmd.ExecuteNonQuery();
+                    LoadData(); 
+                } catch (Exception ex)
+                {
+                    MessageBox.Show("Gagal Hapus: " + ex.Message);
+                }
+            }
+        }
     }
 }
