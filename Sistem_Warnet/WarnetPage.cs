@@ -21,6 +21,27 @@ namespace Sistem_Warnet
             conn = new SqlConnection(connectionString);
         }
 
+        private void LoadData()
+        {
+            try
+            {
+                if (conn.State == ConnectionState.Closed) conn.Open();
+
+                string query = "SELECT p.id_pc, p.nomor_pc, t.nama_tier, p.status" +
+                                "FROM Master_PC p JOIN Tier_PC t ON p.id_tier = t.id_tier";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                DataTable dt = new DataTable();
+                dt.Load(reader);
+                dgvDataPC.DataSource = dt;
+                reader.Close();
+            } catch (Exception ex)
+            {
+                MessageBox.Show("Gagal Load: " + ex.Message);
+            }
+        }
+
         private void Warnet_Form_Load(object sender, EventArgs e)
         {
 
