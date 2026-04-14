@@ -133,5 +133,15 @@ namespace Sistem_Warnet
                 }
             }
         }
+
+        private void dgvDataPC_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+            if (e.RowIndex >= 0)
+            {
+                DataGridViewRow row = dgvDataPC.Rows[e.RowIndex];
+                txtNoPC.Text = row.Cells["nomor_pc"].Value.ToString();
+                cmbStatus.Text = row.Cells["status"].Value.ToString();
+            }
+        }
     }
 }

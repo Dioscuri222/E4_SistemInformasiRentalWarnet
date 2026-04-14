@@ -162,6 +162,7 @@
             this.dgvDataPC.RowTemplate.Height = 24;
             this.dgvDataPC.Size = new System.Drawing.Size(311, 287);
             this.dgvDataPC.TabIndex = 12;
+            this.dgvDataPC.CellContentClick += new System.Windows.Forms.DataGridViewCellEventHandler(this.dgvDataPC_CellContentClick);
             // 
             // lblTotal
             // 
