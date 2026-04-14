@@ -105,6 +105,7 @@
             this.btnSimpan.TabIndex = 6;
             this.btnSimpan.Text = "Simpan";
             this.btnSimpan.UseVisualStyleBackColor = true;
+            this.btnSimpan.Click += new System.EventHandler(this.btnSimpan_Click);
             // 
             // btnUpdate
             // 

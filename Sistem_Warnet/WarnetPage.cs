@@ -61,5 +61,32 @@ namespace Sistem_Warnet
         {
 
         }
+
+        private void btnSimpan_Click(object sender, EventArgs e)
+        {
+            if (txtNoPC.Text == "")
+            {
+                MessageBox.Show("Nomor PC tidak boleh kosong!");
+                return;
+            }
+
+            try
+            {
+                string query = "INSERT INTO Master_PC (id_tier, nomor_pc, status) VALUES (@tier, @nomor, @status)";
+                SqlCommand cmd = new SqlCommand(query, conn);
+                cmd.Parameters.AddWithValue("@tier", cmbTier.SelectedValue);
+                cmd.Parameters.AddWithValue("@nomor", txtNoPC.Text);
+                cmd.Parameters.AddWithValue("@status", cmbStatus.Text);
+
+                if (conn.State == ConnectionState.Closed) conn.Open();
+                cmd.ExecuteNonQuery();
+
+                MessageBox.Show("Data berhasil disimpan!");
+                LoadData();
+            } catch (Exception ex)
+            {
+                MessageBox.Show("Gagal Simpan: " + ex.Message);
+            }
+        }
     }
 }
