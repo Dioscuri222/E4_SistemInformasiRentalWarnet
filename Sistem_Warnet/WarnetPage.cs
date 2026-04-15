@@ -294,6 +294,8 @@ namespace Sistem_Warnet
                 MessageBox.Show("Pilih data di tabel yang ingin diubah!");
                 return;
             }
+            DialogResult result = MessageBox.Show("Yakin ingin mengupdate data?", "Konfirmasi", MessageBoxButtons.YesNo);
+            if (result == DialogResult.No) return;
 
             try
             {
