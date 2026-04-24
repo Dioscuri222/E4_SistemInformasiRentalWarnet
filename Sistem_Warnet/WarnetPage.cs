@@ -153,6 +153,20 @@ namespace Sistem_Warnet
                 return;
             }
 
+            if (string.IsNullOrEmpty(txtNoPC.Text))
+            {
+                MessageBox.Show("Nomor PC harus diisi");
+                return;
+            }
+
+            string input = txtNoPC.Text.ToUpper();
+            if (!(input.StartsWith("PC-") || input.StartsWith("PC-VIP-")))
+            {
+                MessageBox.Show("Format Nomor PC salah! Harus diawali dengan 'PC-' atau 'PC-VIP-'.\nContoh: PC-01 atau PC-VIP-01");
+                txtNoPC.Focus();
+                return;
+            }
+
             try
             {
                 string query = "INSERT INTO Master_PC (id_tier, nomor_pc, status) VALUES (@tier, @nomor, @status)";
