@@ -21,6 +21,7 @@ namespace Sistem_Warnet
             conn = new SqlConnection(connectionString);
         }
 
+        //Menambahkan Class Staff
         public class Staff
         {
             public int Id { get; set; }
@@ -166,6 +167,7 @@ namespace Sistem_Warnet
                 return;
             }
 
+            // Constraint Per PC
             string input = txtNoPC.Text.ToUpper();
             if (!(input.StartsWith("PC-") || input.StartsWith("PC-VIP-")))
             {
