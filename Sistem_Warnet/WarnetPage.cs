@@ -11,6 +11,13 @@ using System.Windows.Forms;
 
 namespace Sistem_Warnet
 {
+    //Menambahkan Class Staff
+    public class Staff
+    {
+        public int Id { get; set; }
+        public string Name { get; set; }
+        public string Role { get; set; }
+    }
     public partial class Warnet_Form : Form
     {
         private string connectionString = "Data Source=FASYALTP\\FASYALTP;Initial Catalog=DBWarnet;Integrated Security=True";
@@ -19,13 +26,6 @@ namespace Sistem_Warnet
         {
             InitializeComponent();
             conn = new SqlConnection(connectionString);
-        }
-
-        public class Staff
-        {
-            public int Id { get; set; }
-            public string Name { get; set; }
-            public string Role { get; set; }
         }
 
         private void LoadData()
@@ -166,6 +166,7 @@ namespace Sistem_Warnet
                 return;
             }
 
+            // Constraint Per PC
             string input = txtNoPC.Text.ToUpper();
             if (!(input.StartsWith("PC-") || input.StartsWith("PC-VIP-")))
             {
