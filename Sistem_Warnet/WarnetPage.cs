@@ -71,10 +71,11 @@ namespace Sistem_Warnet
             {
                 if (conn.State == ConnectionState.Closed) conn.Open();
 
-                string query = "SELECT id_tier, nama_tier FROM Tier_PC";
-                SqlCommand cmd = new SqlCommand(query, conn);
-                SqlDataReader reader = cmd.ExecuteReader();
+                // Refactoring pada LoadTierToComboBox
+                SqlCommand cmd = new SqlCommand("sp_GetTierComboBox", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
 
+                SqlDataReader reader = cmd.ExecuteReader();
                 DataTable dt = new DataTable();
                 dt.Load(reader);
 
