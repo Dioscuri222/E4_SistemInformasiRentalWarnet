@@ -27,6 +27,20 @@ BEGIN
 END
 GO
 
+-- Modifikasi
+ALTER PROCEDURE sp_SearchMasterPC
+    @search VARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    -- Tambahkan JOIN agar nama_tier ikut terpanggil saat dicari
+    SELECT p.id_pc, p.nomor_pc, t.nama_tier, p.status 
+    FROM Master_PC p 
+    JOIN Tier_PC t ON p.id_tier = t.id_tier
+    WHERE p.nomor_pc LIKE @search;
+END
+GO
+
 -- 4. SP untuk Insert Data
 CREATE PROCEDURE sp_InsertMasterPC
     @tier INT,
