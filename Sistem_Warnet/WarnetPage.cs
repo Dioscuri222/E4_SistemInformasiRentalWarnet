@@ -5,6 +5,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -316,5 +317,13 @@ namespace Sistem_Warnet
                 MessageBox.Show("Gagal Update: " + ex.Message);
             }
         }
+
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("berhasil logout!");
+            new Login_Form().Show();
+                this.Close();
+        }
+        
     }
 }

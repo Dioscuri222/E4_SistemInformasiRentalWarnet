@@ -72,5 +72,12 @@ namespace Sistem_Warnet
                 MessageBox.Show("Pencarian Gagal: " + ex.Message);
             }
         }
+
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("berhasil logout!");
+            new Login_Form().Show();
+            this.Close();
+        }
     }
 }
