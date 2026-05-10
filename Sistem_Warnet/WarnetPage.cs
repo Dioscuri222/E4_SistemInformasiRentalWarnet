@@ -117,6 +117,7 @@ namespace Sistem_Warnet
 
                 dataGridView1.Columns.Add("id_pc", "ID PC");
                 dataGridView1.Columns.Add("nomor_pc", "Nomor PC");
+                dataGridView1.Columns.Add("nama_tier", "Tier");
                 dataGridView1.Columns.Add("status", "Status");
 
                 // Refactoring pada Search
@@ -131,6 +132,7 @@ namespace Sistem_Warnet
                     dataGridView1.Rows.Add(
                         reader["id_pc"].ToString(),
                         reader["nomor_pc"].ToString(),
+                        reader["nama_tier"].ToString(),
                         reader["status"].ToString()
                     );
                 }

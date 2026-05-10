@@ -79,5 +79,10 @@ namespace Sistem_Warnet
             new Login_Form().Show();
             this.Close();
         }
+
+        private void btnRefresh_Click(object sender, EventArgs e)
+        {
+            LoadDataPC();
+        }
     }
 }
