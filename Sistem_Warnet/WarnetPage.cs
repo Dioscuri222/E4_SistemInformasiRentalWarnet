@@ -91,6 +91,7 @@ namespace Sistem_Warnet
             cmbStatus.Items.Add("Maintenance");
 
             LoadTierToComboBox();
+            LoadData();
         }
 
         private void label2_Click(object sender, EventArgs e)
