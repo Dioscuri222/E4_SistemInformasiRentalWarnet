@@ -331,8 +331,10 @@ namespace Sistem_Warnet
             {
                 string id = dataGridView1.SelectedRows[0].Cells["id_pc"].Value.ToString();
 
-                string query = "UPDATE Master_PC SET id_tier=@tier, nomor_pc=@nomor, status=@status WHERE id_pc=@id";
-                SqlCommand cmd = new SqlCommand(query, conn);
+                // Refactoring pada Update
+                SqlCommand cmd = new SqlCommand("sp_UpdateMasterPC", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
                 cmd.Parameters.AddWithValue("@tier", cmbTier.SelectedValue);
                 cmd.Parameters.AddWithValue("@nomor", txtNoPC.Text);
                 cmd.Parameters.AddWithValue("@status", cmbStatus.Text);
