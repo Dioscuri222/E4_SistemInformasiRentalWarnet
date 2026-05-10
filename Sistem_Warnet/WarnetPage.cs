@@ -180,8 +180,10 @@ namespace Sistem_Warnet
 
             try
             {
-                string query = "INSERT INTO Master_PC (id_tier, nomor_pc, status) VALUES (@tier, @nomor, @status)";
-                SqlCommand cmd = new SqlCommand(query, conn);
+                // Refactoring Simpan
+                SqlCommand cmd = new SqlCommand("sp_InsertMasterPC", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
                 cmd.Parameters.AddWithValue("@tier", cmbTier.SelectedValue);
                 cmd.Parameters.AddWithValue("@nomor", txtNoPC.Text);
                 cmd.Parameters.AddWithValue("@status", cmbStatus.Text);
