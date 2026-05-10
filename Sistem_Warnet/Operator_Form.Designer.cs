@@ -32,8 +32,8 @@
             this.label4 = new System.Windows.Forms.Label();
             this.txtPencarian = new System.Windows.Forms.TextBox();
             this.btnRefresh = new System.Windows.Forms.Button();
-            this.DataGridView1 = new System.Windows.Forms.DataGridView();
-            ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).BeginInit();
+            this.dataGridView1 = new System.Windows.Forms.DataGridView();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             this.SuspendLayout();
             // 
             // btnSearch
@@ -44,6 +44,7 @@
             this.btnSearch.TabIndex = 14;
             this.btnSearch.Text = "Cari";
             this.btnSearch.UseVisualStyleBackColor = true;
+            this.btnSearch.Click += new System.EventHandler(this.btnSearch_Click);
             // 
             // label4
             // 
@@ -70,22 +71,22 @@
             this.btnRefresh.Text = "Refresh";
             this.btnRefresh.UseVisualStyleBackColor = true;
             // 
-            // DataGridView1
+            // dataGridView1
             // 
-            this.DataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
-            this.DataGridView1.Location = new System.Drawing.Point(136, 66);
-            this.DataGridView1.Name = "DataGridView1";
-            this.DataGridView1.RowHeadersWidth = 51;
-            this.DataGridView1.RowTemplate.Height = 24;
-            this.DataGridView1.Size = new System.Drawing.Size(600, 362);
-            this.DataGridView1.TabIndex = 15;
+            this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
+            this.dataGridView1.Location = new System.Drawing.Point(136, 66);
+            this.dataGridView1.Name = "dataGridView1";
+            this.dataGridView1.RowHeadersWidth = 51;
+            this.dataGridView1.RowTemplate.Height = 24;
+            this.dataGridView1.Size = new System.Drawing.Size(600, 362);
+            this.dataGridView1.TabIndex = 15;
             // 
             // Operator_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(800, 450);
-            this.Controls.Add(this.DataGridView1);
+            this.Controls.Add(this.dataGridView1);
             this.Controls.Add(this.btnRefresh);
             this.Controls.Add(this.btnSearch);
             this.Controls.Add(this.label4);
@@ -93,7 +94,7 @@
             this.Name = "Operator_Form";
             this.Text = "Operator";
             this.Load += new System.EventHandler(this.Staff_Form_Load);
-            ((System.ComponentModel.ISupportInitialize)(this.DataGridView1)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
 
@@ -105,6 +106,6 @@
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox txtPencarian;
         private System.Windows.Forms.Button btnRefresh;
-        private System.Windows.Forms.DataGridView DataGridView1;
+        private System.Windows.Forms.DataGridView dataGridView1;
     }
 }

@@ -9,6 +9,7 @@ using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using static Sistem_Warnet.Warnet_Form;
 
 namespace Sistem_Warnet
 {
@@ -68,20 +69,25 @@ namespace Sistem_Warnet
 
             if (reader.Read())
             {
-                Staff user = new Staff();
-                user.Username = reader["username"].ToString();
-                user.Role = reader["role"].ToString();
+                Staff loggedInUser = new Staff();
+                loggedInUser.IdUser = Convert.ToInt32(reader["id_user"]);
+                loggedInUser.Username = reader["username"].ToString();
+                loggedInUser.Role = reader["role"].ToString();
 
                 reader.Close();
                 this.Hide();
 
-                if (user.Role == "Admin")
+                // Mengarahkan Form berdasarkan Role dari objek loggedInUser
+                if (loggedInUser.Role == "Admin")
                 {
-                    new Warnet_Form().Show();
+                    Warnet_Form adminForm = new Warnet_Form();
+                    adminForm.Show();
                 }
                 else
                 {
-                    new Operator_Form().Show();
+                    // Membuka Form Staff sambil mengirimkan data objek staff tadi
+                    Operator_Form staffForm = new Operator_Form(loggedInUser);
+                    staffForm.Show();
                 }
             }
             else

@@ -21,15 +21,7 @@ namespace Sistem_Warnet
             conn = new SqlConnection(connectionString);
         }
 
-        //Menambahkan Class Staff
-        public class Staff
-        {
-            public int Id { get; set; }
-            public string Name { get; set; }
-            public string Role { get; set; }
-        }
-
-        private void LoadData()
+    private void LoadData()
         {
             try
             {

@@ -15,14 +15,62 @@ namespace Sistem_Warnet
     {
         private string connectionString = "Data Source=FASYALTP\\FASYALTP;Initial Catalog=DBWarnet;Integrated Security=True";
         private SqlConnection conn;
-        public Operator_Form()
+
+        public Staff currentStaff;
+        public Operator_Form(Staff user)
         {
             InitializeComponent();
+            conn = new SqlConnection(connectionString);
+            this.currentStaff = user;
         }
 
         private void Staff_Form_Load(object sender, EventArgs e)
         {
+            dataGridView1.ReadOnly = true;
+            dataGridView1.AllowUserToAddRows = false;
+            dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 
+            LoadDataPC();
+        }
+
+        private void LoadDataPC()
+        {
+            try
+            {
+                if (conn.State == ConnectionState.Closed) conn.Open();
+
+                SqlCommand cmd = new SqlCommand("sp_LoadDataPC", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                dataGridView1.DataSource = dt;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal memuat data: " + ex.Message);
+            }
+        }
+
+        private void btnSearch_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (conn.State == ConnectionState.Closed) conn.Open();
+                SqlCommand cmd = new SqlCommand("sp_SearchMasterPC", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@search", "%" + txtPencarian.Text + "%");
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
+                dataGridView1.DataSource = dt;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Pencarian Gagal: " + ex.Message);
+            }
         }
     }
 }
