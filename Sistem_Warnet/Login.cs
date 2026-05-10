@@ -58,18 +58,31 @@ namespace Sistem_Warnet
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            string query = "SELECT role FROM Pengguna_Staf WHERE username=@user AND password=@pass";
-            SqlCommand cmd = new SqlCommand(query, conn);
-            cmd.Parameters.AddWithValue("@user", txtUsername.Text);
-            cmd.Parameters.AddWithValue("@pass", txtPassword.Text);
+            SqlCommand cmd = new SqlCommand("sp_Login", conn);
+            cmd.CommandType = CommandType.StoredProcedure;
+
+            cmd.Parameters.AddWithValue("@username", txtUsername.Text);
+            cmd.Parameters.AddWithValue("@password", txtPassword.Text);
 
             SqlDataReader reader = cmd.ExecuteReader();
 
             if (reader.Read())
             {
-                Warnet_Form main = new Warnet_Form();
-                main.Show();
+                Staff user = new Staff();
+                user.Username = reader["username"].ToString();
+                user.Role = reader["role"].ToString();
+
+                reader.Close();
                 this.Hide();
+
+                if (user.Role == "Admin")
+                {
+                    new Warnet_Form().Show();
+                }
+                else
+                {
+                    new Staff_Form().Show();
+                }
             }
             else
             {

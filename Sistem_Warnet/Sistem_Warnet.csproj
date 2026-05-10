@@ -48,6 +48,12 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Staff_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Staff_Form.Designer.cs">
+      <DependentUpon>Staff_Form.cs</DependentUpon>
+    </Compile>
     <Compile Include="WarnetPage.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -62,6 +68,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Staff_Form.resx">
+      <DependentUpon>Staff_Form.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="WarnetPage.resx">
       <DependentUpon>WarnetPage.cs</DependentUpon>
     </EmbeddedResource>
