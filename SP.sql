@@ -83,3 +83,15 @@ BEGIN
     SELECT @Total = COUNT(*) FROM Master_PC;
 END
 GO
+
+-- SP Untuk Login
+CREATE PROCEDURE sp_LoginStaff
+    @username VARCHAR(50),
+    @password VARCHAR(50)
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT id_user, username, role 
+    FROM Pengguna_Staf 
+    WHERE username = @username AND password = @password;
+END
