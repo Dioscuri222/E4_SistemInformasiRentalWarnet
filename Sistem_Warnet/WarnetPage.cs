@@ -265,43 +265,8 @@ namespace Sistem_Warnet
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            try
-            {
-                if (conn.State == System.Data.ConnectionState.Closed)
-                {
-                    conn.Open();
-                }
-
-                dataGridView1.Rows.Clear();
-                dataGridView1.Columns.Clear();
-
-                dataGridView1.Columns.Add("id_pc", "ID PC");
-                dataGridView1.Columns.Add("nomor_pc", "Nomor PC");
-                dataGridView1.Columns.Add("nama_tier", "Tier");
-                dataGridView1.Columns.Add("status", "Status");
-
-                string query = "SELECT p.id_pc, p.nomor_pc, t.nama_tier, p.status " +
-                               "FROM Master_PC p JOIN Tier_PC t ON p.id_tier = t.id_tier";
-
-                SqlCommand cmd = new SqlCommand(query, conn);
-                SqlDataReader reader = cmd.ExecuteReader();
-
-                while (reader.Read())
-                {
-                    dataGridView1.Rows.Add(
-                        reader["id_pc"].ToString(),
-                        reader["nomor_pc"].ToString(),
-                        reader["nama_tier"].ToString(),
-                        reader["status"].ToString()
-                    );
-                }
-
-                reader.Close();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Gagal menampilkan data: " + ex.Message);
-            }
+            // Memanggil ulang LoadData() agar tidak ada pengulangan kode yang panjang
+            LoadData();
         }
 
         private void txtNoPC_TextChanged(object sender, EventArgs e)
