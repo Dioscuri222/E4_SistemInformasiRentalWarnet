@@ -208,14 +208,20 @@ namespace Sistem_Warnet
         {
             try
             {
-                string query = "SELECT COUNT(*) FROM Master_PC";
-                SqlCommand cmd = new SqlCommand(query, conn);
-
                 if (conn.State == ConnectionState.Closed) conn.Open();
-                int total = (int)cmd.ExecuteScalar();
 
-                lblTotal.Text = "Total PC Terdaftar: " + total.ToString(); 
-            } catch (Exception ex)
+                SqlCommand cmd = new SqlCommand("sp_CountMasterPC_Output", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter outputParam = new SqlParameter("@Total", SqlDbType.Int);
+                outputParam.Direction = ParameterDirection.Output;
+                cmd.Parameters.Add(outputParam);
+
+                cmd.ExecuteNonQuery();
+
+                lblTotal.Text = "Total PC Terdaftar: " + outputParam.ToString(); 
+            } 
+            catch (Exception ex)
             {
                 MessageBox.Show("Gagal Hitung: " + ex.Message);
             }
