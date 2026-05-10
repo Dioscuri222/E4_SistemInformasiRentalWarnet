@@ -81,7 +81,7 @@ namespace Sistem_Warnet
                 }
                 else
                 {
-                    new Staff_Form().Show();
+                    new Operator_Form().Show();
                 }
             }
             else

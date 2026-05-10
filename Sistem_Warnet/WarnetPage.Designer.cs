@@ -228,7 +228,7 @@
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
             this.Name = "Warnet_Form";
-            this.Text = "Rental Warnet";
+            this.Text = "Admin";
             this.Load += new System.EventHandler(this.Warnet_Form_Load);
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).EndInit();
             this.ResumeLayout(false);

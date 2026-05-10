@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
 using System.Text;
@@ -10,9 +11,11 @@ using System.Windows.Forms;
 
 namespace Sistem_Warnet
 {
-    public partial class Staff_Form : Form
+    public partial class Operator_Form : Form
     {
-        public Staff_Form()
+        private string connectionString = "Data Source=FASYALTP\\FASYALTP;Initial Catalog=DBWarnet;Integrated Security=True";
+        private SqlConnection conn;
+        public Operator_Form()
         {
             InitializeComponent();
         }
