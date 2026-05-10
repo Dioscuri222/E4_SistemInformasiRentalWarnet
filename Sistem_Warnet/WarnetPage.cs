@@ -126,8 +126,9 @@ namespace Sistem_Warnet
                 dataGridView1.Columns.Add("nomor_pc", "Nomor PC");
                 dataGridView1.Columns.Add("status", "Status");
 
-                string query = "SELECT * FROM Master_PC WHERE nomor_pc LIKE @search";
-                SqlCommand cmd = new SqlCommand(query, conn);
+                // Refactoring pada Search
+                SqlCommand cmd = new SqlCommand("sp_SearchMasterPC", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@search", "%" + txtPencarian.Text + "%");
 
                 SqlDataReader reader = cmd.ExecuteReader();
