@@ -44,7 +44,7 @@ namespace Sistem_Warnet
             InitializeComponent();
             conn = new SqlConnection(connectionString);
 
-            //txtPassword.UseSystemPasswordChar = true;
+            txtPassword.UseSystemPasswordChar = true;
         }
 
         private void Form1_Load(object sender, EventArgs e)
