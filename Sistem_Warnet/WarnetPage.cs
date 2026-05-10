@@ -236,8 +236,10 @@ namespace Sistem_Warnet
                 try
                 {
                     string id = dataGridView1.SelectedRows[0].Cells["id_pc"].Value.ToString();
-                    string query = "DELETE FROM Master_PC WHERE id_pc = @id";
-                    SqlCommand cmd = new SqlCommand(query, conn);
+
+                    // Refactoring pada Delete
+                    SqlCommand cmd = new SqlCommand("sp_DeleteMasterPC", conn);
+                    cmd.CommandType = CommandType.StoredProcedure;
                     cmd.Parameters.AddWithValue("@id", id);
 
                     if (conn.State == ConnectionState.Closed) conn.Open();
