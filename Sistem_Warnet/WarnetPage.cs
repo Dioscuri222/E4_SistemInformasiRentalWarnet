@@ -35,10 +35,10 @@ namespace Sistem_Warnet
             {
                 if (conn.State == ConnectionState.Closed) conn.Open();
 
-                string query = "SELECT p.id_pc, p.nomor_pc, t.nama_tier, p.status " +
-                               "FROM Master_PC p JOIN Tier_PC t ON p.id_tier = t.id_tier";
+                // Refactoring pada LoadData 
+                SqlCommand cmd = new SqlCommand("sp_LoadDataPC", conn);
+                cmd.CommandType = CommandType.StoredProcedure;
 
-                SqlCommand cmd = new SqlCommand(query, conn);
                 SqlDataReader reader = cmd.ExecuteReader();
 
                 dataGridView1.Rows.Clear();
@@ -271,11 +271,13 @@ namespace Sistem_Warnet
 
                 dataGridView1.Columns.Add("id_pc", "ID PC");
                 dataGridView1.Columns.Add("nomor_pc", "Nomor PC");
+                dataGridView1.Columns.Add("nama_tier", "Tier");
                 dataGridView1.Columns.Add("status", "Status");
 
-                string query = "SELECT * FROM Master_PC";
-                SqlCommand cmd = new SqlCommand(query, conn);
+                string query = "SELECT p.id_pc, p.nomor_pc, t.nama_tier, p.status " +
+                               "FROM Master_PC p JOIN Tier_PC t ON p.id_tier = t.id_tier";
 
+                SqlCommand cmd = new SqlCommand(query, conn);
                 SqlDataReader reader = cmd.ExecuteReader();
 
                 while (reader.Read())
@@ -283,6 +285,7 @@ namespace Sistem_Warnet
                     dataGridView1.Rows.Add(
                         reader["id_pc"].ToString(),
                         reader["nomor_pc"].ToString(),
+                        reader["nama_tier"].ToString(),
                         reader["status"].ToString()
                     );
                 }
