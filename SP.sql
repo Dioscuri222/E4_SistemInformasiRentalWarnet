@@ -85,7 +85,7 @@ END
 GO
 
 -- SP Untuk Login
-CREATE PROCEDURE sp_LoginStaff
+CREATE PROCEDURE sp_Login
     @username VARCHAR(50),
     @password VARCHAR(50)
 AS
