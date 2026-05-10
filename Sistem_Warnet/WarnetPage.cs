@@ -219,7 +219,7 @@ namespace Sistem_Warnet
 
                 cmd.ExecuteNonQuery();
 
-                lblTotal.Text = "Total PC Terdaftar: " + outputParam.ToString(); 
+                lblTotal.Text = "Total PC Terdaftar: " + outputParam.Value.ToString(); 
             } 
             catch (Exception ex)
             {
