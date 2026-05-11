@@ -109,3 +109,9 @@ BEGIN
     FROM Pengguna_Staf 
     WHERE username = @username AND password = @password;
 END
+
+-- Membuat View DataPC
+CREATE VIEW vw_DataPC AS
+SELECT p.id_pc, p.nomor_pc, t.nama_tier, p.status 
+FROM Master_PC p 
+JOIN Tier_PC t ON p.id_tier = t.id_tier;
