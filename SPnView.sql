@@ -115,3 +115,7 @@ CREATE VIEW vw_DataPC AS
 SELECT p.id_pc, p.nomor_pc, t.nama_tier, p.status 
 FROM Master_PC p 
 JOIN Tier_PC t ON p.id_tier = t.id_tier;
+
+-- SQLi Backup
+SELECT * INTO Master_PC_Backup 
+FROM Master_PC;

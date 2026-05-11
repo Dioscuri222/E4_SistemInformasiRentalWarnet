@@ -23,7 +23,7 @@ namespace Sistem_Warnet
             conn = new SqlConnection(connectionString);
         }
 
-    private void LoadData()
+        private void LoadData()
         {
             try
             {
@@ -67,8 +67,8 @@ namespace Sistem_Warnet
                 dt.Load(reader);
 
                 cmbTier.DataSource = dt;
-                cmbTier.DisplayMember = "nama_tier"; 
-                cmbTier.ValueMember = "id_tier";     
+                cmbTier.DisplayMember = "nama_tier";
+                cmbTier.ValueMember = "id_tier";
 
                 reader.Close();
             }
@@ -141,7 +141,7 @@ namespace Sistem_Warnet
             }
             catch (Exception ex)
             {
-             MessageBox.Show("Gagal mencari data: " + ex.Message);
+                MessageBox.Show("Gagal mencari data: " + ex.Message);
             }
         }
 
@@ -183,7 +183,8 @@ namespace Sistem_Warnet
 
                 MessageBox.Show("Data berhasil disimpan!");
                 LoadData();
-            } catch (Exception ex)
+            }
+            catch (Exception ex)
             {
                 MessageBox.Show("Gagal Simpan: " + ex.Message);
             }
@@ -209,8 +210,8 @@ namespace Sistem_Warnet
 
                 cmd.ExecuteNonQuery();
 
-                lblTotal.Text = "Total PC Terdaftar: " + outputParam.Value.ToString(); 
-            } 
+                lblTotal.Text = "Total PC Terdaftar: " + outputParam.Value.ToString();
+            }
             catch (Exception ex)
             {
                 MessageBox.Show("Gagal Hitung: " + ex.Message);
@@ -319,7 +320,7 @@ namespace Sistem_Warnet
         {
             MessageBox.Show("berhasil logout!");
             new Login_Form().Show();
-                this.Close();
+            this.Close();
         }
 
         private void BindingControls()
@@ -331,6 +332,55 @@ namespace Sistem_Warnet
             txtNoPC.DataBindings.Add("Text", bindingSource, "nomor_pc");
             cmbTier.DataBindings.Add("Text", bindingSource, "nama_tier");
             cmbStatus.DataBindings.Add("Text", bindingSource, "status");
+        }
+
+        private void btnTestInjection_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (conn.State == ConnectionState.Closed) conn.Open();
+
+                string query = "UPDATE Master_PC SET status='HACKED' WHERE nomor_pc='" + txtNoPC.Text + "'";
+
+                SqlCommand cmd = new SqlCommand(query, conn);
+                int result = cmd.ExecuteNonQuery();
+                MessageBox.Show(result + " baris berhasil diubah!");
+                LoadData();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message);
+            }
+        }
+private void btnReset_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                using (SqlConnection conn = new SqlConnection(connectionString))
+                {
+                    conn.Open();
+
+                    string query = @"
+                IF OBJECT_ID('dbo.Master_PC_Backup') IS NOT NULL
+                BEGIN
+                    DELETE FROM dbo.Master_PC;
+                    INSERT INTO dbo.Master_PC
+                    SELECT * FROM dbo.Master_PC_Backup;
+                END";
+
+                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    {
+                        cmd.ExecuteNonQuery();
+                    }
+                }
+
+                MessageBox.Show("Data berhasil direset dari tabel backup!");
+                LoadData();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Reset gagal: " + ex.Message);
+            }
         }
     }
 }
