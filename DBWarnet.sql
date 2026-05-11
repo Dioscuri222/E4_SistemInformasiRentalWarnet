@@ -34,6 +34,13 @@ CREATE TABLE Master_PC (
     FOREIGN KEY (id_tier) REFERENCES Tier_PC(id_tier)
 );
 
+ALTER TABLE Master_PC
+ADD CONSTRAINT CHK_NomorPC_Format 
+CHECK (nomor_pc LIKE 'PC-%' OR nomor_pc LIKE 'PC-VIP-%');
+
+UPDATE Master_PC 
+SET nomor_pc = 'PC-03' 
+WHERE nomor_pc = '0';
 
 -- =========================================================
 -- 2. PEMBUATAN TABEL TRANSAKSIONAL (Child Tables)
