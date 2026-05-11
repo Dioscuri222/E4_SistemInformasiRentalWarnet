@@ -16,6 +16,7 @@ namespace Sistem_Warnet
     {
         private string connectionString = "Data Source=FASYALTP\\FASYALTP;Initial Catalog=DBWarnet;Integrated Security=True";
         private SqlConnection conn;
+        private BindingSource bindingSource = new BindingSource();
         public Warnet_Form()
         {
             InitializeComponent();
@@ -28,29 +29,20 @@ namespace Sistem_Warnet
             {
                 if (conn.State == ConnectionState.Closed) conn.Open();
 
-                // Refactoring pada LoadData 
-                SqlCommand cmd = new SqlCommand("sp_LoadDataPC", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
+                string query = "SELECT * FROM vw_DataPC";
+                SqlCommand cmd = new SqlCommand(query, conn);
 
-                SqlDataReader reader = cmd.ExecuteReader();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
 
-                dataGridView1.Rows.Clear();
-                dataGridView1.Columns.Clear();
-                dataGridView1.Columns.Add("id_pc", "ID PC");
-                dataGridView1.Columns.Add("nomor_pc", "Nomor PC");
-                dataGridView1.Columns.Add("nama_tier", "Tier");
-                dataGridView1.Columns.Add("status", "Status");
+                // Fill akan otomatis mengeksekusi query dan membuatkan kolom ID, Nomor, Tier, Status
+                da.Fill(dt);
 
-                while (reader.Read())
-                {
-                    dataGridView1.Rows.Add(
-                        reader["id_pc"].ToString(),
-                        reader["nomor_pc"].ToString(),
-                        reader["nama_tier"].ToString(),
-                        reader["status"].ToString()
-                    );
-                }
-                reader.Close();
+                // Proses Binding: Menempelkan tabel ke source, lalu source ke grid
+                bindingSource.DataSource = dt;
+                dataGridView1.DataSource = bindingSource;
+
+                bindingNavigator1.BindingSource = bindingSource;
             }
             catch (Exception ex)
             {

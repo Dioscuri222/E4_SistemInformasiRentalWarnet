@@ -15,6 +15,7 @@ namespace Sistem_Warnet
     {
         private string connectionString = "Data Source=FASYALTP\\FASYALTP;Initial Catalog=DBWarnet;Integrated Security=True";
         private SqlConnection conn;
+        private BindingSource bindingSource = new BindingSource();
 
         public Staff currentStaff;
         public Operator_Form(Staff user)
@@ -30,22 +31,27 @@ namespace Sistem_Warnet
             dataGridView1.AllowUserToAddRows = false;
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
 
-            LoadDataPC();
+            LoadData();
         }
 
-        private void LoadDataPC()
+        private void LoadData()
         {
             try
             {
                 if (conn.State == ConnectionState.Closed) conn.Open();
 
-                SqlCommand cmd = new SqlCommand("sp_LoadDataPC", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
+                string query = "SELECT * FROM vw_DataPC";
+                SqlCommand cmd = new SqlCommand(query, conn);
 
+                // Menerapkan Binding dan Disconnected Architecture
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 DataTable dt = new DataTable();
                 da.Fill(dt);
-                dataGridView1.DataSource = dt;
+
+                bindingSource.DataSource = dt;
+                dataGridView1.DataSource = bindingSource;
+
+                bindingNavigator1.BindingSource = bindingSource;
             }
             catch (Exception ex)
             {
@@ -82,7 +88,7 @@ namespace Sistem_Warnet
 
         private void btnRefresh_Click(object sender, EventArgs e)
         {
-            LoadDataPC();
+            LoadData();
         }
     }
 }
