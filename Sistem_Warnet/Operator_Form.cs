@@ -90,5 +90,10 @@ namespace Sistem_Warnet
         {
             LoadData();
         }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
+        {
+
+        }
     }
 }
