@@ -1,17 +1,17 @@
 # 🛡️ Dokumentasi Simulasi SQL Injection - Sistem Warnet
 
-Dokumentasi ini menjelaskan bagaimana aplikasi ini menangani celah keamanan SQL Injection (SQLi) serta strategi pertahanan yang diterapkan sesuai panduan Modul Praktikum PABD.
+Dokumentasi ini menjelaskan bagaimana aplikasi ini menangani celah keamanan SQL Injection (SQLi) serta strategi pertahanan yang diterapkan semoga mirip modul semungkin.
 
 ---
 
 ## 🚨 1. Celah Keamanan (The Vulnerability)
-Kami sengaja membiarkan satu "lubang" kecil pada fitur **Test Injection** untuk menunjukkan betapa bahayanya kode yang tidak aman.
+contoh pada fitur **Test Injection** untuk menunjukkan betapa bahayanya kode yang tidak aman.
 
 * **Masalahnya:** Fitur ini menggunakan metode *String Concatenation* atau asal "tambah-tambahan" teks untuk merakit perintah database.
 * **Kodenya:** `string query = "UPDATE Master_PC SET status='HACKED' WHERE nomor_pc='" + txtNoPC.Text + "'";`
 
 ### 💣 Skenario Serangan
-Seorang penyerang bisa mengetikkan "mantra" khusus di kolom input:
+Seorang penyerang bisa mengetikkan di kolom input:
 `PC-01' OR '1'='1`
 
 **Hasilnya?** Perintah yang dikirim ke database berubah menjadi perintah yang sangat kuat karena kondisi `'1'='1'` selalu dianggap benar. Akibatnya, status **seluruh PC** di database akan berubah menjadi 'HACKED' hanya dengan satu klik.
