@@ -174,6 +174,8 @@ namespace Sistem_Warnet
                 SqlCommand cmd = new SqlCommand("sp_InsertMasterPC", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
+
+                // SQLi prevention dengan parameterized query, sehingga input dianggap sebagai data, bukan kode
                 cmd.Parameters.AddWithValue("@tier", cmbTier.SelectedValue);
                 cmd.Parameters.AddWithValue("@nomor", txtNoPC.Text);
                 cmd.Parameters.AddWithValue("@status", cmbStatus.Text);
@@ -352,20 +354,24 @@ namespace Sistem_Warnet
                 MessageBox.Show(ex.Message);
             }
         }
-private void btnReset_Click(object sender, EventArgs e)
+
+
+        private void btnReset_Click(object sender, EventArgs e)
         {
             try
             {
                 using (SqlConnection conn = new SqlConnection(connectionString))
                 {
                     conn.Open();
-
+                    // Menyalakan INSERT IDENTITY karena kolom id_pc (Auto-Increment)
                     string query = @"
                 IF OBJECT_ID('dbo.Master_PC_Backup') IS NOT NULL
                 BEGIN
                     DELETE FROM dbo.Master_PC;
-                    INSERT INTO dbo.Master_PC
-                    SELECT * FROM dbo.Master_PC_Backup;
+                    SET IDENTITY_INSERT dbo.Master_PC ON;
+                    INSERT INTO dbo.Master_PC (id_pc, id_tier, nomor_pc, status)
+                    SELECT id_pc, id_tier, nomor_pc, status FROM dbo.Master_PC_Backup;
+                    SET IDENTITY_INSERT dbo.Master_PC OFF;
                 END";
 
                     using (SqlCommand cmd = new SqlCommand(query, conn))
