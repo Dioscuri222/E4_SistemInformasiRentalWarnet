@@ -43,6 +43,8 @@ namespace Sistem_Warnet
                 dataGridView1.DataSource = bindingSource;
 
                 bindingNavigator1.BindingSource = bindingSource;
+
+                BindingControls();
             }
             catch (Exception ex)
             {
@@ -319,6 +321,16 @@ namespace Sistem_Warnet
             new Login_Form().Show();
                 this.Close();
         }
-        
+
+        private void BindingControls()
+        {
+            txtNoPC.DataBindings.Clear();
+            cmbTier.DataBindings.Clear();
+            cmbStatus.DataBindings.Clear();
+
+            txtNoPC.DataBindings.Add("Text", bindingSource, "nomor_pc");
+            cmbTier.DataBindings.Add("Text", bindingSource, "nama_tier");
+            cmbStatus.DataBindings.Add("Text", bindingSource, "status");
+        }
     }
 }
