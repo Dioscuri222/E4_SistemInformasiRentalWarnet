@@ -119,41 +119,26 @@ namespace Sistem_Warnet
         {
             try
             {
-                if (conn.State == System.Data.ConnectionState.Closed)
-                {
-                    conn.Open();
-                }
+                if (conn.State == ConnectionState.Closed) conn.Open();
 
-                dataGridView1.Rows.Clear();
-                dataGridView1.Columns.Clear();
-
-                dataGridView1.Columns.Add("id_pc", "ID PC");
-                dataGridView1.Columns.Add("nomor_pc", "Nomor PC");
-                dataGridView1.Columns.Add("nama_tier", "Tier");
-                dataGridView1.Columns.Add("status", "Status");
-
-                // Refactoring pada Search
                 SqlCommand cmd = new SqlCommand("sp_SearchMasterPC", conn);
                 cmd.CommandType = CommandType.StoredProcedure;
+
+                // Parameter pencarian
                 cmd.Parameters.AddWithValue("@search", "%" + txtPencarian.Text + "%");
 
-                SqlDataReader reader = cmd.ExecuteReader();
+                // Gunakan DataAdapter (Disconnected Architecture), bukan DataReader
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                DataTable dt = new DataTable();
+                da.Fill(dt);
 
-                while (reader.Read())
+                // Masukkan hasil pencarian langsung ke BindingSource
+                // DataGridView akan otomatis menyesuaikan diri tanpa perlu di-Clear() manual!
+                bindingSource.DataSource = dt;
+
+                if (dt.Rows.Count == 0)
                 {
-                    dataGridView1.Rows.Add(
-                        reader["id_pc"].ToString(),
-                        reader["nomor_pc"].ToString(),
-                        reader["nama_tier"].ToString(),
-                        reader["status"].ToString()
-                    );
-                }
-
-                reader.Close();
-
-                if (dataGridView1.Rows.Count == 0)
-                {
-                    MessageBox.Show("Data PC tidak ditemukan.");
+                    MessageBox.Show("Data PC tidak ditemukan.", "Pencarian", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 }
             }
             catch (Exception ex)
