@@ -80,6 +80,21 @@ namespace Sistem_Warnet
 
         private void Warnet_Form_Load(object sender, EventArgs e)
         {
+
+            // === APLIKASIKAN TEMA UI ===
+            UIHelper.FormatForm(this);
+            UIHelper.FormatGrid(dataGridView1);
+
+            // Tombol-tombol utama
+            UIHelper.FormatPrimaryButton(btnSimpan);
+            UIHelper.FormatPrimaryButton(btnUpdate);
+            UIHelper.FormatPrimaryButton(btnSearch);
+
+            // Tombol peringatan
+            UIHelper.FormatDangerButton(btnDelete);
+            UIHelper.FormatDangerButton(btnLogout);
+            // ============================
+
             cmbStatus.Items.Clear();
             cmbStatus.Items.Add("Tersedia");
             cmbStatus.Items.Add("Maintenance");

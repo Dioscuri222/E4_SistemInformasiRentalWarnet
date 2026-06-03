@@ -55,6 +55,7 @@
       <DependentUpon>Operator_Form.cs</DependentUpon>
     </Compile>
     <Compile Include="Staff.cs" />
+    <Compile Include="UIHelper.cs" />
     <Compile Include="WarnetPage.cs">
       <SubType>Form</SubType>
     </Compile>

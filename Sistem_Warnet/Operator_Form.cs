@@ -27,6 +27,18 @@ namespace Sistem_Warnet
 
         private void Staff_Form_Load(object sender, EventArgs e)
         {
+
+            // === APLIKASIKAN TEMA UI ===
+            UIHelper.FormatForm(this);
+            UIHelper.FormatGrid(dataGridView1);
+
+            // Tombol-tombol utama
+            UIHelper.FormatPrimaryButton(btnSearch);
+
+            // Tombol peringatan
+            UIHelper.FormatDangerButton(btnLogout);
+            // ============================
+
             dataGridView1.ReadOnly = true;
             dataGridView1.AllowUserToAddRows = false;
             dataGridView1.SelectionMode = DataGridViewSelectionMode.FullRowSelect;
