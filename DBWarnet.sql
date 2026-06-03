@@ -35,32 +35,6 @@ CREATE TABLE Master_PC (
 );
 
 
--- 1. ubah data lama yang salah agar mengikuti aturan baru ('VIP-01')
-UPDATE Master_PC 
-SET nomor_pc = 'VIP-01' 
-WHERE nomor_pc = 'PC-VIP1';
-
-ALTER TABLE Master_PC
-ADD CONSTRAINT CHK_NomorPC_Format 
-CHECK (
-	-- Aturan 1: Awalan harus PC- atau VIP- (Tidak lagi PC-VIP-)
-    (nomor_pc LIKE 'PC-%' OR nomor_pc LIKE 'VIP-%') 
-    AND 
-	-- Aturan 2: TIDAK BOLEH ada karakter selain Alfabet (A-Z), Angka (0-9), dan Strip (-)
-    nomor_pc NOT LIKE '%[^a-zA-Z0-9-]%'
-);
-
-
-/* Constraint Lama
-ALTER TABLE Master_PC
-ADD CONSTRAINT CHK_NomorPC_Format 
-CHECK (nomor_pc LIKE 'PC-%' OR nomor_pc LIKE 'PC-VIP-%');
-
-UPDATE Master_PC 
-SET nomor_pc = 'PC-03' 
-WHERE nomor_pc = '0';
-*/
-
 -- =========================================================
 -- 2. PEMBUATAN TABEL TRANSAKSIONAL (Child Tables)
 -- =========================================================
@@ -124,7 +98,7 @@ VALUES
 
 
 
--- Baru
+-- Baru buat di jalanin
 
 -- 1. Kosongkan tabel yang saling berelasi agar tidak ada data sisa yang melanggar
 DELETE FROM Voucher_Sesi;

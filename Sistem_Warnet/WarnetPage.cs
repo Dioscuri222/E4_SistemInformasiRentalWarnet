@@ -203,9 +203,26 @@ namespace Sistem_Warnet
 
             if (!Regex.IsMatch(input, @"^(PC|VIP)-\d+$"))
             {
-                MessageBox.Show("Format Nomor PC tidak valid!\n\nAturan:\n1. Harus diawali 'PC-' atau 'VIP-'\n2. Hanya boleh diikuti oleh Angka.\n\nContoh yang benar: PC-01, VIP-02",
-                                "Format Ilegal", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("Format Nomor PC tidak valid!\n\nAturan:\n1. Harus diawali 'PC-' atau 'VIP-'\n2. Hanya boleh diikuti oleh Angka.\n\nContoh yang benar: PC-01, VIP-02");
                 txtNoPC.Focus();
+                return;
+            }
+
+
+            // Validasi Keselarasan Prefix dan Tier
+            string tierTerpilih = cmbTier.Text; // Mengambil teks 'Reguler' atau 'VIP' dari combobox
+
+            if (input.StartsWith("PC-") && tierTerpilih != "Reguler")
+            {
+                MessageBox.Show("Nomor dengan awalan 'PC-' harus dimasukkan ke tier Reguler!", "Ketidakcocokan Tier", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                cmbTier.Focus();
+                return;
+            }
+
+            if (input.StartsWith("VIP-") && tierTerpilih != "VIP")
+            {
+                MessageBox.Show("Nomor dengan awalan 'VIP-' harus dimasukkan ke tier VIP!", "Ketidakcocokan Tier", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                cmbTier.Focus();
                 return;
             }
 
@@ -218,7 +235,7 @@ namespace Sistem_Warnet
 
                 // SQLi prevention dengan parameterized query, sehingga input dianggap sebagai data, bukan kode
                 cmd.Parameters.AddWithValue("@tier", cmbTier.SelectedValue);
-                cmd.Parameters.AddWithValue("@nomor", txtNoPC.Text);
+                cmd.Parameters.AddWithValue("@nomor", input);
                 cmd.Parameters.AddWithValue("@status", cmbStatus.Text);
 
                 if (conn.State == ConnectionState.Closed) conn.Open();
