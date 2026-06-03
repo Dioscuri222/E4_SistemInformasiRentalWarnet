@@ -45,7 +45,8 @@ namespace Sistem_Warnet
 
                 bindingNavigator1.BindingSource = bindingSource;
 
-                BindingControls();
+                // Bug DataBinding Update dan Simpan jadi error tetapi tersimpan sementara????
+                //BindingControls();
             }
             catch (Exception ex)
             {
@@ -163,54 +164,27 @@ namespace Sistem_Warnet
 
         private void btnSimpan_Click(object sender, EventArgs e)
         {
-            // langsung uppercase
-            txtNoPC.CharacterCasing = CharacterCasing.Upper;
-            if (txtNoPC.Text == "")
-            {
-                MessageBox.Show("Nomor PC tidak boleh kosong!");
-                return;
-            }
-
-            if (string.IsNullOrEmpty(txtNoPC.Text))
-            {
-                MessageBox.Show("Nomor PC harus diisi");
-                return;
-            }
-
-            // Constraint Per PC
+            // 1. Ambil input dan bersihkan spasi
             string input = txtNoPC.Text.ToUpper().Trim();
+
+            // 2. Cek Kosong
             if (string.IsNullOrEmpty(input))
             {
-                MessageBox.Show("Nomor PC tidak boleh kosong");
+                MessageBox.Show("Nomor PC tidak boleh kosong!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtNoPC.Focus();
                 return;
             }
 
-            if (!(input.StartsWith("PC-") || input.StartsWith("VIP-")))
-            {
-                MessageBox.Show("Format salah! Harus diawali dengan 'PC-' atau 'VIP-'.\nContoh: PC-01 atau VIP-01");
-                txtNoPC.Focus();
-                return;
-            }
-
-            // Cek Karakter Spesial
-            if (input.Any(c => !char.IsLetterOrDigit(c) && c != '-'))
-            {
-                MessageBox.Show("Nomor PC tidak boleh mengandung spasi atau karakter spesial (@, *, &, titik, dll)!");
-                txtNoPC.Focus();
-                return;
-            }
-
+            // 3. Validasi Induk (Regex memblokir karakter aneh, spasi, dan format yang salah sekaligus)
             if (!Regex.IsMatch(input, @"^(PC|VIP)-\d+$"))
             {
-                MessageBox.Show("Format Nomor PC tidak valid!\n\nAturan:\n1. Harus diawali 'PC-' atau 'VIP-'\n2. Hanya boleh diikuti oleh Angka.\n\nContoh yang benar: PC-01, VIP-02");
+                MessageBox.Show("Format Nomor PC tidak valid!\n\nAturan:\n1. Harus diawali 'PC-' atau 'VIP-'\n2. Hanya boleh diikuti oleh Angka.\n\nContoh yang benar: PC-01, VIP-02", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtNoPC.Focus();
                 return;
             }
 
-
-            // Validasi Keselarasan Prefix dan Tier
-            string tierTerpilih = cmbTier.Text; // Mengambil teks 'Reguler' atau 'VIP' dari combobox
+            // 4. Validasi Keselarasan Prefix dan Tier
+            string tierTerpilih = cmbTier.Text;
 
             if (input.StartsWith("PC-") && tierTerpilih != "Reguler")
             {
@@ -225,7 +199,6 @@ namespace Sistem_Warnet
                 cmbTier.Focus();
                 return;
             }
-
             try
             {
                 // Refactoring Simpan
@@ -333,7 +306,24 @@ namespace Sistem_Warnet
 
         private void cmbTier_SelectedIndexChanged(object sender, EventArgs e)
         {
+            // Mengambil teks yang sedang dipilih, misal: "Reguler" atau "VIP"
+            string tierTerpilih = cmbTier.Text;
 
+            // Kita hanya mengisinya otomatis JIKA kotak teksnya kosong, atau jika admin hanya ganti-ganti pilihan Combobox.
+            if (string.IsNullOrEmpty(txtNoPC.Text) || txtNoPC.Text == "PC-" || txtNoPC.Text == "VIP-")
+            {
+                if (tierTerpilih == "Reguler")
+                {
+                    txtNoPC.Text = "PC-";
+                }
+                else if (tierTerpilih == "VIP")
+                {
+                    txtNoPC.Text = "VIP-";
+                }
+
+                // Pindahkan kursor teks (kedap-kedip) otomatis ke bagian paling belakang (setelah tanda strip)
+                txtNoPC.SelectionStart = txtNoPC.Text.Length;
+            }
         }
 
         private void cmbStatus_SelectedIndexChanged(object sender, EventArgs e)
@@ -351,6 +341,44 @@ namespace Sistem_Warnet
             DialogResult result = MessageBox.Show("Yakin ingin mengupdate data?", "Konfirmasi", MessageBoxButtons.YesNo);
             if (result == DialogResult.No) return;
 
+
+            // 1. Ambil input dan bersihkan spasi
+            string input = txtNoPC.Text.ToUpper().Trim();
+
+            // 2. Cek Kosong
+            if (string.IsNullOrEmpty(input))
+            {
+                MessageBox.Show("Nomor PC tidak boleh kosong!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtNoPC.Focus();
+                return;
+            }
+
+            // 3. Validasi Induk (Regex memblokir karakter aneh, spasi, dan format yang salah sekaligus)
+            if (!Regex.IsMatch(input, @"^(PC|VIP)-\d+$"))
+            {
+                MessageBox.Show("Format Nomor PC tidak valid!\n\nAturan:\n1. Harus diawali 'PC-' atau 'VIP-'\n2. Hanya boleh diikuti oleh Angka.\n\nContoh yang benar: PC-01, VIP-02", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtNoPC.Focus();
+                return;
+            }
+
+            // 4. Validasi Keselarasan Prefix dan Tier
+            string tierTerpilih = cmbTier.Text;
+
+            if (input.StartsWith("PC-") && tierTerpilih != "Reguler")
+            {
+                MessageBox.Show("Nomor dengan awalan 'PC-' harus dimasukkan ke tier Reguler!", "Ketidakcocokan Tier", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                cmbTier.Focus();
+                return;
+            }
+
+            if (input.StartsWith("VIP-") && tierTerpilih != "VIP")
+            {
+                MessageBox.Show("Nomor dengan awalan 'VIP-' harus dimasukkan ke tier VIP!", "Ketidakcocokan Tier", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                cmbTier.Focus();
+                return;
+            }
+
+
             try
             {
                 string id = dataGridView1.SelectedRows[0].Cells["id_pc"].Value.ToString();
@@ -360,7 +388,7 @@ namespace Sistem_Warnet
                 cmd.CommandType = CommandType.StoredProcedure;
 
                 cmd.Parameters.AddWithValue("@tier", cmbTier.SelectedValue);
-                cmd.Parameters.AddWithValue("@nomor", txtNoPC.Text);
+                cmd.Parameters.AddWithValue("@nomor", input);
                 cmd.Parameters.AddWithValue("@status", cmbStatus.Text);
                 cmd.Parameters.AddWithValue("@id", id);
 
