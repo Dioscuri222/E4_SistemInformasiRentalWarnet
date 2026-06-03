@@ -1,3 +1,42 @@
+# 🛡️ Dokumentasi Simulasi SQL Injection - Sistem Warnet
+
+Dokumentasi ini menjelaskan bagaimana aplikasi ini menangani celah keamanan SQL Injection (SQLi) serta strategi pertahanan yang diterapkan semoga mirip modul semungkin.
+
+---
+
+## 🚨 1. Celah Keamanan (The Vulnerability)
+contoh pada fitur **Test Injection** untuk menunjukkan betapa bahayanya kode yang tidak aman.
+
+* **Masalahnya:** Fitur ini menggunakan metode *String Concatenation* atau asal "tambah-tambahan" teks untuk merakit perintah database.
+* **Kodenya:** `string query = "UPDATE Master_PC SET status='HACKED' WHERE nomor_pc='" + txtNoPC.Text + "'";`
+
+### 💣 Skenario Serangan
+Seorang penyerang bisa mengetikkan di kolom input:
+`PC-01' OR '1'='1`
+
+**Hasilnya?** Perintah yang dikirim ke database berubah menjadi perintah yang sangat kuat karena kondisi `'1'='1'` selalu dianggap benar. Akibatnya, status **seluruh PC** di database akan berubah menjadi 'HACKED' hanya dengan satu klik.
+
+---
+
+## 🛡️ 2. Strategi Pertahanan (Defense in Depth)
+Untuk mencegah hal di atas terjadi pada fitur utama, kami menerapkan strategi pertahanan berlapis (Defense in Depth):
+
+1.  **Lapis 1: Parameterized Query**
+    Input dari user tidak langsung digabung ke teks query, melainkan dikirim melalui parameter khusus (`@nomor`). Ini memastikan input dianggap sebagai "teks biasa", bukan perintah yang bisa dijalankan.
+2.  **Lapis 2: Stored Procedure**
+    Logika query disembunyikan di dalam database. Aplikasi hanya tinggal memanggil namanya saja, sehingga struktur tabel asli tidak terekspos langsung.
+3.  **Lapis 3: SQL VIEW**
+    Untuk menampilkan data, aplikasi menggunakan VIEW (`vw_DataPC`) untuk membatasi akses. Ini memastikan user hanya bisa melihat apa yang memang diizinkan untuk dilihat.
+
+---
+
+## 🔄 3. Fitur Pemulihan (Reset Data)
+Jika data rusak akibat simulasi serangan, kami menyediakan tombol **Reset** yang akan menghapus data yang tercemar dan mengembalikannya dari tabel cadangan secara instan.
+
+
+---
+
+
 1. Form koneksi 
 <img width="292" height="200" alt="Screenshot 2026-04-14 230809" src="https://github.com/user-attachments/assets/bea8636f-4164-4269-95d5-67481dea7935" />
 
