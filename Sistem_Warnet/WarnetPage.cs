@@ -163,6 +163,8 @@ namespace Sistem_Warnet
 
         private void btnSimpan_Click(object sender, EventArgs e)
         {
+            // langsung uppercase
+            txtNoPC.CharacterCasing = CharacterCasing.Upper;
             if (txtNoPC.Text == "")
             {
                 MessageBox.Show("Nomor PC tidak boleh kosong!");
