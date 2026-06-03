@@ -34,6 +34,24 @@ CREATE TABLE Master_PC (
     FOREIGN KEY (id_tier) REFERENCES Tier_PC(id_tier)
 );
 
+
+-- 1. ubah data lama yang salah agar mengikuti aturan baru ('VIP-01')
+UPDATE Master_PC 
+SET nomor_pc = 'VIP-01' 
+WHERE nomor_pc = 'PC-VIP1';
+
+ALTER TABLE Master_PC
+ADD CONSTRAINT CHK_NomorPC_Format 
+CHECK (
+	-- Aturan 1: Awalan harus PC- atau VIP- (Tidak lagi PC-VIP-)
+    (nomor_pc LIKE 'PC-%' OR nomor_pc LIKE 'VIP-%') 
+    AND 
+	-- Aturan 2: TIDAK BOLEH ada karakter selain Alfabet (A-Z), Angka (0-9), dan Strip (-)
+    nomor_pc NOT LIKE '%[^a-zA-Z0-9-]%'
+);
+
+
+/* Constraint Lama
 ALTER TABLE Master_PC
 ADD CONSTRAINT CHK_NomorPC_Format 
 CHECK (nomor_pc LIKE 'PC-%' OR nomor_pc LIKE 'PC-VIP-%');
@@ -41,6 +59,7 @@ CHECK (nomor_pc LIKE 'PC-%' OR nomor_pc LIKE 'PC-VIP-%');
 UPDATE Master_PC 
 SET nomor_pc = 'PC-03' 
 WHERE nomor_pc = '0';
+*/
 
 -- =========================================================
 -- 2. PEMBUATAN TABEL TRANSAKSIONAL (Child Tables)
@@ -89,9 +108,53 @@ VALUES
 ('Reguler', 5000),
 ('VIP', 8000);
 
--- Memasukkan 2 PC Reguler (id_tier = 1) dan 1 PC VIP (id_tier = 2)
+-- Memasukkan 2 PC Reguler (id_tier = 1) dan 1 VIP (id_tier = 2)
 INSERT INTO Master_PC (id_tier, nomor_pc, status) 
 VALUES 
 (1, 'PC-01', 'Tersedia'),
 (1, 'PC-02', 'Tersedia'),
-(2, 'PC-VIP1', 'Tersedia');
+(2, 'VIP-01', 'Tersedia');
+
+
+
+
+
+
+
+
+
+
+-- Baru
+
+-- 1. Kosongkan tabel yang saling berelasi agar tidak ada data sisa yang melanggar
+DELETE FROM Voucher_Sesi;
+DELETE FROM Master_PC;
+GO
+
+-- 2. Hapus constraint lama jika ada
+IF EXISTS (SELECT * FROM sys.objects WHERE name = 'CHK_NomorPC_Format' AND type = 'C')
+    ALTER TABLE Master_PC DROP CONSTRAINT CHK_NomorPC_Format;
+GO
+
+-- 3. Pasang Pagar Aturan Baru: Wajib PC- atau VIP-, dan TANPA karakter spesial
+ALTER TABLE Master_PC
+ADD CONSTRAINT CHK_NomorPC_Format 
+CHECK (
+    (nomor_pc LIKE 'PC-%' OR nomor_pc LIKE 'VIP-%') 
+    AND 
+    nomor_pc NOT LIKE '%[^a-zA-Z0-9-]%' -- Memblokir @, *, &, titik, spasi, dll.
+);
+GO
+
+-- 4. Isi kembali dengan data awal yang bersih dan sah
+INSERT INTO Master_PC (id_tier, nomor_pc, status) 
+VALUES 
+(1, 'PC-01', 'Tersedia'),
+(1, 'PC-02', 'Tersedia'),
+(2, 'VIP-01', 'Tersedia');
+GO
+
+-- 5. Perbarui juga tabel backup untuk tombol Reset aplikasi C#
+IF OBJECT_ID('dbo.Master_PC_Backup') IS NOT NULL DROP TABLE dbo.Master_PC_Backup;
+SELECT * INTO Master_PC_Backup FROM Master_PC;
+GO

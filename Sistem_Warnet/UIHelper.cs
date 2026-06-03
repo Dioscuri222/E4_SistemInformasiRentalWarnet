@@ -59,7 +59,10 @@ namespace Sistem_Warnet
             dgv.RowsDefaultCellStyle.SelectionBackColor = Color.FromArgb(52, 152, 219); 
 
             dgv.CellBorderStyle = DataGridViewCellBorderStyle.SingleHorizontal;
-            dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill; 
+            dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.Fill;
+
+            dgv.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells;
+            dgv.ScrollBars = ScrollBars.Both;
         }
     }
 }

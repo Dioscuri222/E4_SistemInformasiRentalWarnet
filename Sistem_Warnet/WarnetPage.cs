@@ -8,6 +8,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace Sistem_Warnet
@@ -175,10 +176,33 @@ namespace Sistem_Warnet
             }
 
             // Constraint Per PC
-            string input = txtNoPC.Text.ToUpper();
-            if (!(input.StartsWith("PC-") || input.StartsWith("PC-VIP-")))
+            string input = txtNoPC.Text.ToUpper().Trim();
+            if (string.IsNullOrEmpty(input))
             {
-                MessageBox.Show("Format Nomor PC salah! Harus diawali dengan 'PC-' atau 'PC-VIP-'.\nContoh: PC-01 atau PC-VIP-01");
+                MessageBox.Show("Nomor PC tidak boleh kosong");
+                txtNoPC.Focus();
+                return;
+            }
+
+            if (!(input.StartsWith("PC-") || input.StartsWith("VIP-")))
+            {
+                MessageBox.Show("Format salah! Harus diawali dengan 'PC-' atau 'VIP-'.\nContoh: PC-01 atau VIP-01");
+                txtNoPC.Focus();
+                return;
+            }
+
+            // Cek Karakter Spesial
+            if (input.Any(c => !char.IsLetterOrDigit(c) && c != '-'))
+            {
+                MessageBox.Show("Nomor PC tidak boleh mengandung spasi atau karakter spesial (@, *, &, titik, dll)!");
+                txtNoPC.Focus();
+                return;
+            }
+
+            if (!Regex.IsMatch(input, @"^(PC|VIP)-\d+$"))
+            {
+                MessageBox.Show("Format Nomor PC tidak valid!\n\nAturan:\n1. Harus diawali 'PC-' atau 'VIP-'\n2. Hanya boleh diikuti oleh Angka.\n\nContoh yang benar: PC-01, VIP-02",
+                                "Format Ilegal", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtNoPC.Focus();
                 return;
             }
