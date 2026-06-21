@@ -75,6 +75,7 @@
             this.cmbTier.Name = "cmbTier";
             this.cmbTier.Size = new System.Drawing.Size(121, 24);
             this.cmbTier.TabIndex = 10;
+            this.cmbTier.SelectedIndexChanged += new System.EventHandler(this.cmbTier_SelectedIndexChanged);
             // 
             // label3
             // 
@@ -110,6 +111,7 @@
             this.cmbNoPC.Name = "cmbNoPC";
             this.cmbNoPC.Size = new System.Drawing.Size(121, 24);
             this.cmbNoPC.TabIndex = 12;
+            this.cmbNoPC.SelectedIndexChanged += new System.EventHandler(this.cmbNoPC_SelectedIndexChanged);
             // 
             // lblTotalBayar
             // 
