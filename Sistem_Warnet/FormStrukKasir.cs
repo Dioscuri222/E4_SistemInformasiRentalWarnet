@@ -20,14 +20,18 @@ namespace Sistem_Warnet
         {
             try
             {
-                // Tarik data dari database
+                // 1. Tarik data dari database (menggunakan DAL)
                 DataTable dt = dbLogic.CetakStrukKasir(kodeVoucher);
 
-                // Load file desain Crystal Report (Pastikan Anda sudah mendesain ReportStruk.rpt)
+                // 2. Load file desain Crystal Report
                 ReportStruk rpt = new ReportStruk();
                 rpt.SetDataSource(dt);
 
-                // Tampilkan ke viewer
+                // 3. TAMBAHAN WAJIB: Injeksi parameter langsung ke file .rpt
+                // Ini yang akan mencegah pop-up "Enter Parameter Values" muncul!
+                rpt.SetParameterValue("@kode_voucher", kodeVoucher);
+
+                // 4. Tampilkan ke viewer
                 crystalReportViewer1.ReportSource = rpt;
                 crystalReportViewer1.Refresh();
             }
