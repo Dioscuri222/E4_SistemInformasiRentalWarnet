@@ -1,4 +1,4 @@
-CREATE PROCEDURE sp_ProsesTransaksiKasirLengkap
+CREATE PROCEDURE sp_ProsesTransaksiKasir
     @id_user INT,
     @id_tier INT,
     @id_pc INT,
