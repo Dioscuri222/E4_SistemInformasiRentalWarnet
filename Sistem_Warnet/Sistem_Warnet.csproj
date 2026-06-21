@@ -55,6 +55,12 @@
       <DependentUpon>Operator_Form.cs</DependentUpon>
     </Compile>
     <Compile Include="Staff.cs" />
+    <Compile Include="Transaksi_Form.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Transaksi_Form.Designer.cs">
+      <DependentUpon>Transaksi_Form.cs</DependentUpon>
+    </Compile>
     <Compile Include="UIHelper.cs" />
     <Compile Include="WarnetPage.cs">
       <SubType>Form</SubType>
@@ -72,6 +78,9 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Operator_Form.resx">
       <DependentUpon>Operator_Form.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Transaksi_Form.resx">
+      <DependentUpon>Transaksi_Form.cs</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="WarnetPage.resx">
       <DependentUpon>WarnetPage.cs</DependentUpon>
