@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
 using System.Text;
@@ -54,6 +55,22 @@ namespace Sistem_Warnet
             {
                 if (conn.State == System.Data.ConnectionState.Open) conn.Close();
             }
+        }
+
+        public DataTable CetakStrukKasir(string kodeVoucher)
+        {
+            if (conn.State == System.Data.ConnectionState.Closed) conn.Open();
+
+            SqlCommand cmd = new SqlCommand("sp_CetakStruk", conn);
+            cmd.CommandType = System.Data.CommandType.StoredProcedure;
+            cmd.Parameters.AddWithValue("@kode_voucher", kodeVoucher);
+
+            SqlDataAdapter da = new SqlDataAdapter(cmd);
+            DataTable dtStruk = new DataTable();
+            da.Fill(dtStruk);
+
+            conn.Close();
+            return dtStruk;
         }
     }
 }
