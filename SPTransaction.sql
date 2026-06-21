@@ -51,3 +51,20 @@ BEGIN
     JOIN Tier_PC t ON p.id_tier = t.id_tier;
 END
 GO
+
+CREATE PROCEDURE sp_GetLaporanPendapatan
+    @TglAwal DATE,
+    @TglAkhir DATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+    SELECT tp.id_transaksi AS 'ID Transaksi',
+           t.nama_tier AS 'Kategori Paket',
+           tp.durasi_jam AS 'Durasi (Jam)',
+           tp.total_bayar AS 'Pendapatan (Rp)',
+           tp.tgl_transaksi AS 'Waktu Pembelian'
+    FROM Transaksi_Pembelian tp
+    JOIN Tier_PC t ON tp.id_tier = t.id_tier
+    WHERE CAST(tp.tgl_transaksi AS DATE) BETWEEN @TglAwal AND @TglAkhir;
+END
+GO
