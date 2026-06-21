@@ -180,17 +180,17 @@ namespace Sistem_Warnet
                 int durasiJam = Convert.ToInt32(nudDurasiJam.Value);
                 string kodeVoucherBaru;
 
-                // Panggil method DAL yang baru
+                // Panggil method DAL
                 dbLogic.ProsesPembelianVoucher(currentOperator.IdUser, idTierTerpilih, idPc, durasiJam, totalBayar, out kodeVoucherBaru);
 
-                MessageBox.Show($"Transaksi Berhasil!\n\nKode Login Pelanggan: {kodeVoucherBaru}", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                // Buka form Crystal Report Struk sebagai pop-up (ShowDialog)
+                FormStrukKasir formStruk = new FormStrukKasir(kodeVoucherBaru);
+                formStruk.ShowDialog(); // ShowDialog membuat form transaksi membeku sampai struk ditutup
 
-                // Refresh Form agar PC yang barusan dibeli hilang dari ComboBox
+                // Setelah struk ditutup kasir, reset form untuk transaksi berikutnya
                 txtUangTunai.Clear();
                 nudDurasiJam.Value = 1;
                 LoadDataPC();
-
-                // TODO: Panggil Form Crystal Report Struk Anda di bawah sini
             }
             catch (Exception ex)
             {

@@ -208,7 +208,7 @@
             // btnPesan
             // 
             this.btnPesan.BackColor = System.Drawing.Color.YellowGreen;
-            this.btnPesan.Location = new System.Drawing.Point(575, 86);
+            this.btnPesan.Location = new System.Drawing.Point(566, 79);
             this.btnPesan.Name = "btnPesan";
             this.btnPesan.Size = new System.Drawing.Size(91, 40);
             this.btnPesan.TabIndex = 20;
