@@ -37,11 +37,11 @@
             this.cmbNoPC = new System.Windows.Forms.ComboBox();
             this.lblTotalBayar = new System.Windows.Forms.Label();
             this.nudDurasiJam = new System.Windows.Forms.NumericUpDown();
-            this.lblKonversiMenit = new System.Windows.Forms.Label();
-            this.txtBayar = new System.Windows.Forms.TextBox();
-            this.txtKembali = new System.Windows.Forms.TextBox();
+            this.lblMenit = new System.Windows.Forms.Label();
+            this.txtUangTunai = new System.Windows.Forms.TextBox();
+            this.txtKembalian = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
+            this.txtUangKembalian = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nudDurasiJam)).BeginInit();
@@ -126,29 +126,31 @@
             this.nudDurasiJam.Name = "nudDurasiJam";
             this.nudDurasiJam.Size = new System.Drawing.Size(120, 22);
             this.nudDurasiJam.TabIndex = 15;
+            this.nudDurasiJam.ValueChanged += new System.EventHandler(this.nudDurasiJam_ValueChanged);
             // 
-            // lblKonversiMenit
+            // lblMenit
             // 
-            this.lblKonversiMenit.AutoSize = true;
-            this.lblKonversiMenit.Location = new System.Drawing.Point(272, 194);
-            this.lblKonversiMenit.Name = "lblKonversiMenit";
-            this.lblKonversiMenit.Size = new System.Drawing.Size(72, 16);
-            this.lblKonversiMenit.TabIndex = 16;
-            this.lblKonversiMenit.Text = "To Menit = ";
+            this.lblMenit.AutoSize = true;
+            this.lblMenit.Location = new System.Drawing.Point(272, 194);
+            this.lblMenit.Name = "lblMenit";
+            this.lblMenit.Size = new System.Drawing.Size(72, 16);
+            this.lblMenit.TabIndex = 16;
+            this.lblMenit.Text = "To Menit = ";
             // 
-            // txtBayar
+            // txtUangTunai
             // 
-            this.txtBayar.Location = new System.Drawing.Point(137, 298);
-            this.txtBayar.Name = "txtBayar";
-            this.txtBayar.Size = new System.Drawing.Size(100, 22);
-            this.txtBayar.TabIndex = 17;
+            this.txtUangTunai.Location = new System.Drawing.Point(137, 298);
+            this.txtUangTunai.Name = "txtUangTunai";
+            this.txtUangTunai.Size = new System.Drawing.Size(100, 22);
+            this.txtUangTunai.TabIndex = 17;
+            this.txtUangTunai.TextChanged += new System.EventHandler(this.txtUangTunai_TextChanged);
             // 
-            // txtKembali
+            // txtKembalian
             // 
-            this.txtKembali.Location = new System.Drawing.Point(137, 333);
-            this.txtKembali.Name = "txtKembali";
-            this.txtKembali.Size = new System.Drawing.Size(100, 22);
-            this.txtKembali.TabIndex = 18;
+            this.txtKembalian.Location = new System.Drawing.Point(137, 333);
+            this.txtKembalian.Name = "txtKembalian";
+            this.txtKembalian.Size = new System.Drawing.Size(100, 22);
+            this.txtKembalian.TabIndex = 18;
             // 
             // label4
             // 
@@ -159,14 +161,14 @@
             this.label4.TabIndex = 19;
             this.label4.Text = "Uang Tunai:";
             // 
-            // label5
+            // txtUangKembalian
             // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(18, 333);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(110, 16);
-            this.label5.TabIndex = 20;
-            this.label5.Text = "Uang Kembalian:";
+            this.txtUangKembalian.AutoSize = true;
+            this.txtUangKembalian.Location = new System.Drawing.Point(18, 333);
+            this.txtUangKembalian.Name = "txtUangKembalian";
+            this.txtUangKembalian.Size = new System.Drawing.Size(110, 16);
+            this.txtUangKembalian.TabIndex = 20;
+            this.txtUangKembalian.Text = "Uang Kembalian:";
             // 
             // button2
             // 
@@ -177,6 +179,7 @@
             this.button2.TabIndex = 22;
             this.button2.Text = "Cetak Pembayaran";
             this.button2.UseVisualStyleBackColor = false;
+            this.button2.Click += new System.EventHandler(this.button2_Click);
             // 
             // button3
             // 
@@ -187,6 +190,7 @@
             this.button3.TabIndex = 23;
             this.button3.Text = "Batal";
             this.button3.UseVisualStyleBackColor = false;
+            this.button3.Click += new System.EventHandler(this.button3_Click);
             // 
             // Transaksi_Form
             // 
@@ -195,11 +199,11 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
-            this.Controls.Add(this.label5);
+            this.Controls.Add(this.txtUangKembalian);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.txtKembali);
-            this.Controls.Add(this.txtBayar);
-            this.Controls.Add(this.lblKonversiMenit);
+            this.Controls.Add(this.txtKembalian);
+            this.Controls.Add(this.txtUangTunai);
+            this.Controls.Add(this.lblMenit);
             this.Controls.Add(this.nudDurasiJam);
             this.Controls.Add(this.lblTotalBayar);
             this.Controls.Add(this.cmbNoPC);
@@ -229,11 +233,11 @@
         private System.Windows.Forms.ComboBox cmbNoPC;
         private System.Windows.Forms.Label lblTotalBayar;
         private System.Windows.Forms.NumericUpDown nudDurasiJam;
-        private System.Windows.Forms.Label lblKonversiMenit;
-        private System.Windows.Forms.TextBox txtBayar;
-        private System.Windows.Forms.TextBox txtKembali;
+        private System.Windows.Forms.Label lblMenit;
+        private System.Windows.Forms.TextBox txtUangTunai;
+        private System.Windows.Forms.TextBox txtKembalian;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label label5;
+        private System.Windows.Forms.Label txtUangKembalian;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
     }

@@ -214,6 +214,7 @@
             this.btnPesan.TabIndex = 20;
             this.btnPesan.Text = "Pesan";
             this.btnPesan.UseVisualStyleBackColor = false;
+            this.btnPesan.Click += new System.EventHandler(this.btnPesan_Click);
             // 
             // Operator_Form
             // 

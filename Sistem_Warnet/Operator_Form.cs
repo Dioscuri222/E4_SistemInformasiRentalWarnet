@@ -107,5 +107,12 @@ namespace Sistem_Warnet
         {
 
         }
+
+        private void btnPesan_Click(object sender, EventArgs e)
+        {
+            Transaksi_Form formTransaksi = new Transaksi_Form(this.currentStaff);
+            formTransaksi.Show();
+            this.Hide();
+        }
     }
 }
