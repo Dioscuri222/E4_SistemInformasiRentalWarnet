@@ -39,7 +39,7 @@ namespace Sistem_Warnet
             txtKembalian.ReadOnly = true;
 
             // 3. Set nilai awal tampilan
-            txtUangKembalian.Text = "Rp 0";
+            txtKembalian.Text = "Rp 0";
             lblTotalBayar.Text = "Rp 0";
         }
 
@@ -91,24 +91,29 @@ namespace Sistem_Warnet
                 // Validasi jika uang pelanggan kurang
                 if (kembalian < 0)
                 {
-                    txtUangKembalian.Text = "Uang Kurang!";
+                    txtKembalian.Text = "Uang Kurang!";
                 }
                 else
                 {
                     // Menampilkan format uang (contoh: Rp 15.000)
-                    txtUangKembalian.Text = "Rp " + kembalian.ToString("N0");
+                    txtKembalian.Text = "Rp " + kembalian.ToString("N0");
                 }
             }
             else
             {
                 // Jika textbox uang tunai kosong atau berisi karakter aneh
-                txtUangKembalian.Text = "Rp 0";
+                txtKembalian.Text = "Rp 0";
             }
         }
 
         private void button2_Click(object sender, EventArgs e)
         {
             // Logika SQL Insert Transaksi (Anggota 3 dan Anggota 1 bisa kolaborasi di sini)
+        }
+
+        private void txtKembalian_TextChanged(object sender, EventArgs e)
+        {
+
         }
     }
 }

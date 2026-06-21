@@ -41,7 +41,7 @@
             this.txtUangTunai = new System.Windows.Forms.TextBox();
             this.txtKembalian = new System.Windows.Forms.TextBox();
             this.label4 = new System.Windows.Forms.Label();
-            this.txtUangKembalian = new System.Windows.Forms.Label();
+            this.labelkembalian = new System.Windows.Forms.Label();
             this.button2 = new System.Windows.Forms.Button();
             this.button3 = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.nudDurasiJam)).BeginInit();
@@ -151,6 +151,7 @@
             this.txtKembalian.Name = "txtKembalian";
             this.txtKembalian.Size = new System.Drawing.Size(100, 22);
             this.txtKembalian.TabIndex = 18;
+            this.txtKembalian.TextChanged += new System.EventHandler(this.txtKembalian_TextChanged);
             // 
             // label4
             // 
@@ -161,14 +162,14 @@
             this.label4.TabIndex = 19;
             this.label4.Text = "Uang Tunai:";
             // 
-            // txtUangKembalian
+            // labelkembalian
             // 
-            this.txtUangKembalian.AutoSize = true;
-            this.txtUangKembalian.Location = new System.Drawing.Point(18, 333);
-            this.txtUangKembalian.Name = "txtUangKembalian";
-            this.txtUangKembalian.Size = new System.Drawing.Size(110, 16);
-            this.txtUangKembalian.TabIndex = 20;
-            this.txtUangKembalian.Text = "Uang Kembalian:";
+            this.labelkembalian.AutoSize = true;
+            this.labelkembalian.Location = new System.Drawing.Point(18, 333);
+            this.labelkembalian.Name = "labelkembalian";
+            this.labelkembalian.Size = new System.Drawing.Size(110, 16);
+            this.labelkembalian.TabIndex = 20;
+            this.labelkembalian.Text = "Uang Kembalian:";
             // 
             // button2
             // 
@@ -199,7 +200,7 @@
             this.ClientSize = new System.Drawing.Size(800, 450);
             this.Controls.Add(this.button3);
             this.Controls.Add(this.button2);
-            this.Controls.Add(this.txtUangKembalian);
+            this.Controls.Add(this.labelkembalian);
             this.Controls.Add(this.label4);
             this.Controls.Add(this.txtKembalian);
             this.Controls.Add(this.txtUangTunai);
@@ -237,7 +238,7 @@
         private System.Windows.Forms.TextBox txtUangTunai;
         private System.Windows.Forms.TextBox txtKembalian;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Label txtUangKembalian;
+        private System.Windows.Forms.Label labelkembalian;
         private System.Windows.Forms.Button button2;
         private System.Windows.Forms.Button button3;
     }
