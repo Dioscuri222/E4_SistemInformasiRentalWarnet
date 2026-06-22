@@ -20,20 +20,19 @@ namespace Sistem_Warnet
         {
             try
             {
-                // 1. Tarik data dari database (menggunakan DAL)
                 DataTable dt = dbLogic.CetakStrukKasir(kodeVoucher);
 
-                // 2. Load file desain Crystal Report
                 ReportStruk rpt = new ReportStruk();
                 rpt.SetDataSource(dt);
 
-                // 3. TAMBAHAN WAJIB: Injeksi parameter langsung ke file .rpt
-                // Ini yang akan mencegah pop-up "Enter Parameter Values" muncul!
-                rpt.SetParameterValue("@kode_voucher", kodeVoucher);
+                // Trik ampuh: Gunakan angka 0 (indeks parameter pertama) 
+                // daripada menggunakan nama string "@kode_voucher"
+                rpt.SetParameterValue(0, kodeVoucher);
 
-                // 4. Tampilkan ke viewer
                 crystalReportViewer1.ReportSource = rpt;
-                crystalReportViewer1.Refresh();
+
+                // CATATAN PENTING: Jangan gunakan crystalReportViewer1.Refresh(); di sini!
+                // Memanggil Refresh akan memicu Crystal Reports bertanya parameter lagi.
             }
             catch (Exception ex)
             {

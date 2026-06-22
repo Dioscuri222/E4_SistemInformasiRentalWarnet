@@ -201,5 +201,30 @@ namespace Sistem_Warnet
         private void lblWaktu_Click(object sender, EventArgs e) { }
         private void txtKembalian_TextChanged(object sender, EventArgs e) { }
         private void cmbTier_SelectedIndexChanged(object sender, EventArgs e) { }
+
+        private void btnResertPCTest_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                string connString = "Data Source=FASYALTP\\FASYALTP;Initial Catalog=DBWarnet;Integrated Security=True";
+
+                using (SqlConnection conn = new SqlConnection(connString))
+                {
+                    conn.Open();
+                    // Eksekusi query paksa untuk mereset seluruh PC
+                    SqlCommand cmd = new SqlCommand("UPDATE Master_PC SET status = 'Tersedia'", conn);
+                    cmd.ExecuteNonQuery();
+                }
+
+                MessageBox.Show("Berhasil! Semua PC sekarang statusnya kembali 'Tersedia'.", "Debugging");
+
+                // Panggil ulang LoadDataPC agar ComboBox langsung terisi lagi
+                LoadDataPC();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal reset PC: " + ex.Message);
+            }
+        }
     }
 }
