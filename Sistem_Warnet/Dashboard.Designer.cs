@@ -44,7 +44,7 @@
             legend1.Name = "Legend1";
             this.chartPendapatan.Legends.Add(legend1);
             this.chartPendapatan.Location = new System.Drawing.Point(16, 36);
-            this.chartPendapatan.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.chartPendapatan.Margin = new System.Windows.Forms.Padding(4);
             this.chartPendapatan.Name = "chartPendapatan";
             series1.ChartArea = "ChartArea1";
             series1.Legend = "Legend1";
@@ -60,9 +60,9 @@
             this.lblTotalPendapatan.Location = new System.Drawing.Point(12, 503);
             this.lblTotalPendapatan.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
             this.lblTotalPendapatan.Name = "lblTotalPendapatan";
-            this.lblTotalPendapatan.Size = new System.Drawing.Size(70, 16);
+            this.lblTotalPendapatan.Size = new System.Drawing.Size(195, 16);
             this.lblTotalPendapatan.TabIndex = 1;
-            this.lblTotalPendapatan.Text = "NOMINAL:";
+            this.lblTotalPendapatan.Text = "Total Pendapatan Keseluruhan:";
             // 
             // label1
             // 
@@ -82,7 +82,7 @@
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lblTotalPendapatan);
             this.Controls.Add(this.chartPendapatan);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            this.Margin = new System.Windows.Forms.Padding(4);
             this.Name = "Dashboard_Form";
             this.Text = "Dashboard";
             this.Load += new System.EventHandler(this.Dashboard_Form_Load);
