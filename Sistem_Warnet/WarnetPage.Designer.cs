@@ -63,6 +63,7 @@
             this.btnTestInjection = new System.Windows.Forms.Button();
             this.btnReset = new System.Windows.Forms.Button();
             this.btnDashboard = new System.Windows.Forms.Button();
+            this.btnImportExcel = new System.Windows.Forms.Button();
             ((System.ComponentModel.ISupportInitialize)(this.dataGridView1)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.bindingNavigator1)).BeginInit();
             this.bindingNavigator1.SuspendLayout();
@@ -102,7 +103,7 @@
             // txtNoPC
             // 
             this.txtNoPC.Location = new System.Drawing.Point(82, 31);
-            this.txtNoPC.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtNoPC.Margin = new System.Windows.Forms.Padding(2);
             this.txtNoPC.Name = "txtNoPC";
             this.txtNoPC.Size = new System.Drawing.Size(92, 20);
             this.txtNoPC.TabIndex = 3;
@@ -112,7 +113,7 @@
             // 
             this.cmbTier.FormattingEnabled = true;
             this.cmbTier.Location = new System.Drawing.Point(82, 59);
-            this.cmbTier.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cmbTier.Margin = new System.Windows.Forms.Padding(2);
             this.cmbTier.Name = "cmbTier";
             this.cmbTier.Size = new System.Drawing.Size(92, 21);
             this.cmbTier.TabIndex = 4;
@@ -122,7 +123,7 @@
             // 
             this.cmbStatus.FormattingEnabled = true;
             this.cmbStatus.Location = new System.Drawing.Point(82, 89);
-            this.cmbStatus.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.cmbStatus.Margin = new System.Windows.Forms.Padding(2);
             this.cmbStatus.Name = "cmbStatus";
             this.cmbStatus.Size = new System.Drawing.Size(92, 21);
             this.cmbStatus.TabIndex = 5;
@@ -131,7 +132,7 @@
             // btnSimpan
             // 
             this.btnSimpan.Location = new System.Drawing.Point(25, 139);
-            this.btnSimpan.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnSimpan.Margin = new System.Windows.Forms.Padding(2);
             this.btnSimpan.Name = "btnSimpan";
             this.btnSimpan.Size = new System.Drawing.Size(56, 19);
             this.btnSimpan.TabIndex = 6;
@@ -142,7 +143,7 @@
             // btnUpdate
             // 
             this.btnUpdate.Location = new System.Drawing.Point(95, 139);
-            this.btnUpdate.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnUpdate.Margin = new System.Windows.Forms.Padding(2);
             this.btnUpdate.Name = "btnUpdate";
             this.btnUpdate.Size = new System.Drawing.Size(56, 19);
             this.btnUpdate.TabIndex = 7;
@@ -153,7 +154,7 @@
             // btnDelete
             // 
             this.btnDelete.Location = new System.Drawing.Point(166, 139);
-            this.btnDelete.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnDelete.Margin = new System.Windows.Forms.Padding(2);
             this.btnDelete.Name = "btnDelete";
             this.btnDelete.Size = new System.Drawing.Size(56, 19);
             this.btnDelete.TabIndex = 8;
@@ -164,7 +165,7 @@
             // txtPencarian
             // 
             this.txtPencarian.Location = new System.Drawing.Point(356, 49);
-            this.txtPencarian.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.txtPencarian.Margin = new System.Windows.Forms.Padding(2);
             this.txtPencarian.Name = "txtPencarian";
             this.txtPencarian.Size = new System.Drawing.Size(128, 20);
             this.txtPencarian.TabIndex = 9;
@@ -183,7 +184,7 @@
             // btnSearch
             // 
             this.btnSearch.Location = new System.Drawing.Point(488, 51);
-            this.btnSearch.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnSearch.Margin = new System.Windows.Forms.Padding(2);
             this.btnSearch.Name = "btnSearch";
             this.btnSearch.Size = new System.Drawing.Size(56, 19);
             this.btnSearch.TabIndex = 11;
@@ -195,7 +196,7 @@
             // 
             this.dataGridView1.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dataGridView1.Location = new System.Drawing.Point(273, 80);
-            this.dataGridView1.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.dataGridView1.Margin = new System.Windows.Forms.Padding(2);
             this.dataGridView1.Name = "dataGridView1";
             this.dataGridView1.RowHeadersWidth = 51;
             this.dataGridView1.RowTemplate.Height = 24;
@@ -216,7 +217,7 @@
             // btnTotal
             // 
             this.btnTotal.Location = new System.Drawing.Point(25, 273);
-            this.btnTotal.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnTotal.Margin = new System.Windows.Forms.Padding(2);
             this.btnTotal.Name = "btnTotal";
             this.btnTotal.Size = new System.Drawing.Size(116, 25);
             this.btnTotal.TabIndex = 15;
@@ -227,7 +228,7 @@
             // btnLoad
             // 
             this.btnLoad.Location = new System.Drawing.Point(82, 184);
-            this.btnLoad.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnLoad.Margin = new System.Windows.Forms.Padding(2);
             this.btnLoad.Name = "btnLoad";
             this.btnLoad.Size = new System.Drawing.Size(70, 24);
             this.btnLoad.TabIndex = 16;
@@ -244,7 +245,7 @@
             // btnLogout
             // 
             this.btnLogout.Location = new System.Drawing.Point(535, 326);
-            this.btnLogout.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnLogout.Margin = new System.Windows.Forms.Padding(2);
             this.btnLogout.Name = "btnLogout";
             this.btnLogout.Size = new System.Drawing.Size(56, 30);
             this.btnLogout.TabIndex = 17;
@@ -371,7 +372,7 @@
             // 
             this.btnTestInjection.BackColor = System.Drawing.Color.Red;
             this.btnTestInjection.Location = new System.Drawing.Point(166, 332);
-            this.btnTestInjection.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnTestInjection.Margin = new System.Windows.Forms.Padding(2);
             this.btnTestInjection.Name = "btnTestInjection";
             this.btnTestInjection.Size = new System.Drawing.Size(63, 24);
             this.btnTestInjection.TabIndex = 19;
@@ -383,7 +384,7 @@
             // 
             this.btnReset.BackColor = System.Drawing.Color.Lime;
             this.btnReset.Location = new System.Drawing.Point(250, 331);
-            this.btnReset.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.btnReset.Margin = new System.Windows.Forms.Padding(2);
             this.btnReset.Name = "btnReset";
             this.btnReset.Size = new System.Drawing.Size(63, 24);
             this.btnReset.TabIndex = 20;
@@ -403,11 +404,24 @@
             this.btnDashboard.UseVisualStyleBackColor = false;
             this.btnDashboard.Click += new System.EventHandler(this.btnDashboard_Click);
             // 
+            // btnImportExcel
+            // 
+            this.btnImportExcel.BackColor = System.Drawing.SystemColors.ActiveCaption;
+            this.btnImportExcel.Location = new System.Drawing.Point(200, 222);
+            this.btnImportExcel.Margin = new System.Windows.Forms.Padding(2);
+            this.btnImportExcel.Name = "btnImportExcel";
+            this.btnImportExcel.Size = new System.Drawing.Size(56, 52);
+            this.btnImportExcel.TabIndex = 22;
+            this.btnImportExcel.Text = "Import dari Excel";
+            this.btnImportExcel.UseVisualStyleBackColor = false;
+            this.btnImportExcel.Click += new System.EventHandler(this.btnImportExcel_Click);
+            // 
             // Warnet_Form
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(600, 366);
+            this.Controls.Add(this.btnImportExcel);
             this.Controls.Add(this.btnDashboard);
             this.Controls.Add(this.btnReset);
             this.Controls.Add(this.btnTestInjection);
@@ -429,7 +443,7 @@
             this.Controls.Add(this.label3);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Margin = new System.Windows.Forms.Padding(2, 2, 2, 2);
+            this.Margin = new System.Windows.Forms.Padding(2);
             this.Name = "Warnet_Form";
             this.Text = "Admin";
             this.Load += new System.EventHandler(this.Warnet_Form_Load);
@@ -477,6 +491,7 @@
         private System.Windows.Forms.Button btnTestInjection;
         private System.Windows.Forms.Button btnReset;
         private System.Windows.Forms.Button btnDashboard;
+        private System.Windows.Forms.Button btnImportExcel;
     }
 }
 

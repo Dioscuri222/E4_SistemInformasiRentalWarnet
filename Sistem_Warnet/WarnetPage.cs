@@ -10,6 +10,8 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.IO;
+using ExcelDataReader;
 
 
 namespace Sistem_Warnet
@@ -236,6 +238,52 @@ namespace Sistem_Warnet
             Dashboard_Form dashboard = new Dashboard_Form();
             // Gunakan ShowDialog agar form utama tidak bisa di-klik selama dashboard terbuka
             dashboard.ShowDialog();
+        }
+
+        private void btnImportExcel_Click(object sender, EventArgs e)
+        {
+            // 1. Buka jendela dialog untuk memilih file Excel
+            using (OpenFileDialog ofd = new OpenFileDialog() { Filter = "Excel Workbook|*.xlsx|Excel 97-2003|*.xls" })
+            {
+                if (ofd.ShowDialog() == DialogResult.OK)
+                {
+                    try
+                    {
+                        // 2. Baca file Excel yang dipilih menjadi FileStream
+                        using (var stream = File.Open(ofd.FileName, FileMode.Open, FileAccess.Read))
+                        {
+                            // 3. Terjemahkan Stream Excel menggunakan ExcelDataReader
+                            using (var reader = ExcelReaderFactory.CreateReader(stream))
+                            {
+                                // 4. Konversi seluruh isi sheet Excel menjadi bentuk DataTable C#
+                                var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+                                {
+                                    ConfigureDataTable = (_) => new ExcelDataTableConfiguration() { UseHeaderRow = true }
+                                });
+
+                                // Ambil Sheet pertama (index 0)
+                                DataTable dtExcel = result.Tables[0];
+
+                                // 5. Kirim DataTable ke DAL untuk dieksekusi ke SQL Server
+                                int berhasil = dbLogic.ImportDataPCMassal(dtExcel);
+
+                                // 6. Notifikasi hasil dan segarkan tabel di layar
+                                MessageBox.Show(berhasil + " data PC baru berhasil diimpor dari Excel!", "Informasi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                LoadData();
+                            }
+                        }
+                    }
+                    catch (IOException)
+                    {
+                        // Error ini spesifik muncul jika file Excel-nya masih terbuka (sedang diedit) di aplikasi Microsoft Excel
+                        MessageBox.Show("Gagal memuat! Pastikan file Excel sedang tidak dibuka di aplikasi Microsoft Excel. Tutup file tersebut terlebih dahulu lalu coba lagi.", "Peringatan Akses", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Terjadi kesalahan sistem: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
+            }
         }
     }
 }

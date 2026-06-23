@@ -276,5 +276,49 @@ namespace Sistem_Warnet
             conn.Close();
             return dtStruk;
         }
+
+        public int ImportDataPCMassal(DataTable dtExcel)
+        {
+            int jumlahBerhasil = 0;
+            using (SqlConnection localConn = new SqlConnection(connectionString))
+            {
+                localConn.Open();
+
+                // Looping membaca setiap baris data dari Excel
+                foreach (DataRow row in dtExcel.Rows)
+                {
+                    try
+                    {
+                        // Menarik data berdasarkan nama header kolom Excel
+                        string nomor = row["Nomor PC"].ToString().ToUpper().Trim();
+                        string tier = row["Tier"].ToString().Trim();
+                        string status = row["Status"].ToString().Trim();
+
+                        // Validasi: Lewati jika baris kosong atau format salah
+                        if (string.IsNullOrEmpty(nomor)) continue;
+
+                        // Tentukan ID Tier (1 = Reguler, 2 = VIP) sesuai database Anda
+                        int idTier = (tier.ToUpper() == "VIP") ? 2 : 1;
+
+                        // Gunakan SP Insert yang sudah ada
+                        SqlCommand cmd = new SqlCommand("sp_InsertMasterPC", localConn);
+                        cmd.CommandType = CommandType.StoredProcedure;
+                        cmd.Parameters.AddWithValue("@tier", idTier);
+                        cmd.Parameters.AddWithValue("@nomor", nomor);
+                        cmd.Parameters.AddWithValue("@status", status);
+
+                        cmd.ExecuteNonQuery();
+                        jumlahBerhasil++;
+                    }
+                    catch
+                    {
+                        // Jika gagal (misal duplikat nomor PC / validasi constraint gagal), 
+                        // program akan melewati baris ini dan melanjutkan ke baris berikutnya
+                        continue;
+                    }
+                }
+            }
+            return jumlahBerhasil;
+        }
     }
 }
