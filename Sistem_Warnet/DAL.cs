@@ -150,6 +150,62 @@ namespace Sistem_Warnet
             }
         }
 
+        // ==========================================
+        // FUNGSI UNTUK LOGIN & TRANSAKSI KASIR
+        // ==========================================
+
+        public Staff CekLogin(string username, string password)
+        {
+            using (SqlConnection localConn = new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("sp_Login", localConn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@username", username);
+                cmd.Parameters.AddWithValue("@password", password);
+
+                localConn.Open();
+                SqlDataReader reader = cmd.ExecuteReader();
+
+                if (reader.Read())
+                {
+                    Staff loggedInUser = new Staff();
+                    loggedInUser.IdUser = Convert.ToInt32(reader["id_user"]);
+                    loggedInUser.Username = reader["username"].ToString();
+                    loggedInUser.Role = reader["role"].ToString();
+                    return loggedInUser;
+                }
+                return null; // Mengembalikan null jika kombinasi username/password salah
+            }
+        }
+
+        public DataTable GetPCTersediaUntukTransaksi()
+        {
+            DataTable dt = new DataTable();
+            using (SqlConnection localConn = new SqlConnection(connectionString))
+            {
+                string query = @"
+            SELECT p.id_pc, p.nomor_pc, t.id_tier, t.nama_tier, t.harga_per_jam
+            FROM Master_PC p
+            INNER JOIN Tier_PC t ON p.id_tier = t.id_tier
+            WHERE p.status = 'Tersedia'";
+
+                SqlCommand cmd = new SqlCommand(query, localConn);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+            }
+            return dt;
+        }
+
+        public void ResetStatusPCSemuaTersedia()
+        {
+            using (SqlConnection localConn = new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("UPDATE Master_PC SET status = 'Tersedia'", localConn);
+                localConn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
         public void ProsesPembelianVoucher(int idUser, int idTier, int idPc, int durasiJam, int totalBayar, out string kodeVoucherAwal)
         {
             // 1. Generate Kode Voucher Acak (6 Karakter)

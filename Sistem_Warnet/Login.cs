@@ -15,93 +15,51 @@ namespace Sistem_Warnet
 {
     public partial class Login_Form : Form
     {
-        private readonly SqlConnection conn;
-        private readonly string connectionString =
-            "Data Source=FASYALTP\\FASYALTP;Initial Catalog=DBWarnet;Integrated Security=True";
+        private DAL dbLogic = new DAL();
 
-        private void ConnectDatabase()
+        public Login_Form()
+        {
+            InitializeComponent();
+            txtPassword.UseSystemPasswordChar = true;
+        }
+
+        private void btnLogin_Click(object sender, EventArgs e)
         {
             try
             {
-                if (conn.State == System.Data.ConnectionState.Closed)
+                // Memanggil fungsi login dari DAL
+                Staff loggedInUser = dbLogic.CekLogin(txtUsername.Text, txtPassword.Text);
 
+                if (loggedInUser != null)
                 {
-                    conn.Open();
+                    this.Hide();
+                    if (loggedInUser.Role == "Admin")
+                    {
+                        new Warnet_Form().Show();
+                    }
+                    else
+                    {
+                        new Operator_Form(loggedInUser).Show();
+                    }
                 }
-
-                MessageBox.Show("Koneksi berhasil!");
+                else
+                {
+                    MessageBox.Show("Login Gagal! Username atau Password salah.");
+                }
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Koneksi gagal: " + ex.Message);
             }
-
-        }
-
-
-        public Login_Form()
-        {
-            InitializeComponent();
-            conn = new SqlConnection(connectionString);
-
-            txtPassword.UseSystemPasswordChar = true;
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnLogin_Click(object sender, EventArgs e)
-        {
-            SqlCommand cmd = new SqlCommand("sp_Login", conn);
-            cmd.CommandType = CommandType.StoredProcedure;
-
-            cmd.Parameters.AddWithValue("@username", txtUsername.Text);
-            cmd.Parameters.AddWithValue("@password", txtPassword.Text);
-
-            SqlDataReader reader = cmd.ExecuteReader();
-
-            if (reader.Read())
-            {
-                Staff loggedInUser = new Staff();
-                loggedInUser.IdUser = Convert.ToInt32(reader["id_user"]);
-                loggedInUser.Username = reader["username"].ToString();
-                loggedInUser.Role = reader["role"].ToString();
-
-                reader.Close();
-                this.Hide();
-
-                // Mengarahkan Form berdasarkan Role dari objek loggedInUser
-                if (loggedInUser.Role == "Admin")
-                {
-                    Warnet_Form adminForm = new Warnet_Form();
-                    adminForm.Show();
-                }
-                else
-                {
-                    // Membuka Form Staff sambil mengirimkan data objek staff tadi
-                    Operator_Form staffForm = new Operator_Form(loggedInUser);
-                    staffForm.Show();
-                }
-            }
-            else
-            {
-                MessageBox.Show("Login Gagal!");
-            }
-            reader.Close();
         }
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            ConnectDatabase();
+            // Opsi ini bisa Anda hapus dari UI jika sudah tidak digunakan
+            MessageBox.Show("Fitur cek koneksi telah diotomatisasi.");
         }
 
-
+        private void Form1_Load(object sender, EventArgs e) { }
+        private void label1_Click(object sender, EventArgs e) { }
     }
 }
