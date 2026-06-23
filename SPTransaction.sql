@@ -119,9 +119,10 @@ BEGIN
         t.nama_tier, 
         ISNULL(SUM(tp.total_bayar), 0) AS total_pendapatan,
         COUNT(tp.id_transaksi) AS jumlah_transaksi
-    FROM Tier_PC t
-    -- Filter waktu dimasukkan ke dalam ON agar Tier yang tidak laku hari itu tetap tampil (0)
-    LEFT JOIN Transaksi_Pembelian tp ON t.id_tier = tp.id_tier
+    -- KUNCI UTAMA: Tambahkan WITH (NOLOCK) di sini
+    FROM Tier_PC t WITH (NOLOCK)
+    -- KUNCI UTAMA: Tambahkan WITH (NOLOCK) di sini juga
+    LEFT JOIN Transaksi_Pembelian tp WITH (NOLOCK) ON t.id_tier = tp.id_tier
     AND (
         (@filter = 'Semua Waktu') OR
         (@filter = 'Hari Ini' AND CAST(tp.tgl_transaksi AS DATE) = CAST(GETDATE() AS DATE)) OR
