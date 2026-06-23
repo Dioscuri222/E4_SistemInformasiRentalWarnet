@@ -320,5 +320,34 @@ namespace Sistem_Warnet
             }
             return jumlahBerhasil;
         }
+
+        public DataRow LoginClient(string kodeVoucher)
+        {
+            DataTable dt = new DataTable();
+            using (SqlConnection localConn = new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("sp_LoginClient", localConn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@kode", kodeVoucher);
+
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+            }
+            // Kembalikan baris pertama jika ditemukan, kembalikan null jika gagal
+            return dt.Rows.Count > 0 ? dt.Rows[0] : null;
+        }
+
+        public void LogoutClient(string kodeVoucher)
+        {
+            using (SqlConnection localConn = new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("sp_LogoutClient", localConn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@kode", kodeVoucher);
+
+                localConn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
     }
 }

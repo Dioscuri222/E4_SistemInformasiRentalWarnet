@@ -1,15 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+using System.Data; // Wajib ditambahkan untuk menggunakan DataRow
 using System.Windows.Forms;
-using static Sistem_Warnet.Warnet_Form;
 
 namespace Sistem_Warnet
 {
@@ -27,8 +18,11 @@ namespace Sistem_Warnet
         {
             try
             {
-                // Memanggil fungsi login dari DAL
-                Staff loggedInUser = dbLogic.CekLogin(txtUsername.Text, txtPassword.Text);
+                string inputUsername = txtUsername.Text.Trim();
+                string inputPassword = txtPassword.Text.Trim();
+
+                // 1. Cek apakah ini login Admin atau Operator
+                Staff loggedInUser = dbLogic.CekLogin(inputUsername, inputPassword);
 
                 if (loggedInUser != null)
                 {
@@ -41,21 +35,44 @@ namespace Sistem_Warnet
                     {
                         new Operator_Form(loggedInUser).Show();
                     }
+                    return; // Hentikan eksekusi di sini jika berhasil login sebagai staff
+                }
+
+                // 2. Jika bukan staff, cek apakah input di kolom Username adalah Kode Voucher Pelanggan
+                DataRow sessionData = dbLogic.LoginClient(inputUsername);
+
+                if (sessionData != null)
+                {
+                    int sisaDetik = Convert.ToInt32(sessionData["sisa_detik_aktual"]);
+                    string nomorPc = sessionData["nomor_pc"].ToString();
+
+                    if (sisaDetik <= 0)
+                    {
+                        MessageBox.Show("Waktu voucher Anda sudah habis!", "Akses Ditolak", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        dbLogic.LogoutClient(inputUsername); // Tutup sesi otomatis di database
+                    }
+                    else
+                    {
+                        this.Hide();
+                        // Buka Dashboard Client
+                        ClientDashboard dashboard = new ClientDashboard(inputUsername, nomorPc, sisaDetik);
+                        dashboard.Show();
+                    }
                 }
                 else
                 {
-                    MessageBox.Show("Login Gagal! Username atau Password salah.");
+                    // 3. Jika bukan staff dan bukan voucher yang valid
+                    MessageBox.Show("Login Gagal! Username/Password salah, atau Kode Voucher tidak ditemukan/habis.", "Gagal", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Koneksi gagal: " + ex.Message);
+                MessageBox.Show("Koneksi gagal: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            // Opsi ini bisa Anda hapus dari UI jika sudah tidak digunakan
             MessageBox.Show("Koneksi berhasil.");
         }
 
