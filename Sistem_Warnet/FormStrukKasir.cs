@@ -64,7 +64,12 @@ namespace Sistem_Warnet
             this.Close();
         }
 
-        private void FormStrukKasir_Load_1(object sender, EventArgs e)
+        private void crystalReportViewer1_Load(object sender, EventArgs e)
+        {
+
+        }
+
+        private void crystalReportViewer1_Load_1(object sender, EventArgs e)
         {
 
         }
