@@ -65,10 +65,5 @@ namespace Sistem_Warnet
                 MessageBox.Show("Gagal memuat grafik: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
-
-        private void Dashboard_Load(object sender, EventArgs e)
-        {
-
-        }
     }
 }
