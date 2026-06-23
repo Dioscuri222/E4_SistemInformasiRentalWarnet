@@ -146,48 +146,23 @@ namespace Sistem_Warnet
         // TOMBOL CETAK PEMBAYARAN (PROSES TRANSAKSI)
         private void button2_Click(object sender, EventArgs e)
         {
-            // 1. Validasi Input
-            if (cmbNoPC.SelectedValue == null)
-            {
-                MessageBox.Show("Pilih PC terlebih dahulu!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-            if (totalBayar == 0)
-            {
-                MessageBox.Show("Durasi atau Harga tidak valid!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
+            // Validasi Input
+            if (cmbNoPC.SelectedValue == null || totalBayar == 0) return;
 
-            // Validasi uang bayar
-            if (int.TryParse(txtUangTunai.Text, out int uangTunai))
-            {
-                if (uangTunai < totalBayar)
-                {
-                    MessageBox.Show("Uang pelanggan kurang!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
-            }
-            else
-            {
-                MessageBox.Show("Masukkan jumlah uang tunai yang valid!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            // 2. Eksekusi Pembelian
             try
             {
                 int idPc = Convert.ToInt32(cmbNoPC.SelectedValue);
                 int durasiJam = Convert.ToInt32(nudDurasiJam.Value);
                 string kodeVoucherBaru;
 
-                // Panggil method DAL
+                // 1. Simpan Transaksi ke Database
                 dbLogic.ProsesPembelianVoucher(currentOperator.IdUser, idTierTerpilih, idPc, durasiJam, totalBayar, out kodeVoucherBaru);
 
-                // Buka form Crystal Report Struk sebagai pop-up (ShowDialog)
+                // 2. KUNCI UTAMA: Buka Form Crystal Reports (Bukan cetak HTML)
                 FormStrukKasir formStruk = new FormStrukKasir(kodeVoucherBaru);
-                formStruk.ShowDialog(); // ShowDialog membuat form transaksi membeku sampai struk ditutup
+                formStruk.ShowDialog();
 
-                // Setelah struk ditutup kasir, reset form untuk transaksi berikutnya
+                // 3. Reset form setelah jendela Crystal Reports ditutup oleh kasir
                 txtUangTunai.Clear();
                 nudDurasiJam.Value = 1;
                 LoadDataPC();
