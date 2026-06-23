@@ -110,7 +110,6 @@ END
 GO
 
 ALTER PROCEDURE sp_StatistikPendapatanTier
-    @filter VARCHAR(20) = 'Semua Waktu'
 AS
 BEGIN
     SET NOCOUNT ON;
@@ -119,16 +118,8 @@ BEGIN
         t.nama_tier, 
         ISNULL(SUM(tp.total_bayar), 0) AS total_pendapatan,
         COUNT(tp.id_transaksi) AS jumlah_transaksi
-    -- KUNCI UTAMA: Tambahkan WITH (NOLOCK) di sini
     FROM Tier_PC t WITH (NOLOCK)
-    -- KUNCI UTAMA: Tambahkan WITH (NOLOCK) di sini juga
     LEFT JOIN Transaksi_Pembelian tp WITH (NOLOCK) ON t.id_tier = tp.id_tier
-    AND (
-        (@filter = 'Semua Waktu') OR
-        (@filter = 'Hari Ini' AND CAST(tp.tgl_transaksi AS DATE) = CAST(GETDATE() AS DATE)) OR
-        (@filter = 'Minggu Ini' AND tp.tgl_transaksi >= DATEADD(wk, DATEDIFF(wk, 0, GETDATE()), 0)) OR
-        (@filter = 'Bulan Ini' AND MONTH(tp.tgl_transaksi) = MONTH(GETDATE()) AND YEAR(tp.tgl_transaksi) = YEAR(GETDATE()))
-    )
     GROUP BY t.nama_tier;
 END
 GO
