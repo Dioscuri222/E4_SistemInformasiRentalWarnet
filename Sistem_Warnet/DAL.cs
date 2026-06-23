@@ -19,6 +19,137 @@ namespace Sistem_Warnet
             conn = new SqlConnection(connectionString);
         }
 
+        // ==========================================
+        // KUMPULAN FUNGSI CRUD UNTUK MASTER PC
+        // ==========================================
+        public DataTable GetAllMasterPC()
+        {
+            DataTable dt = new DataTable();
+            using (SqlConnection localConn = new SqlConnection(connectionString))
+            {
+                // Menggunakan view vw_DataPC
+                SqlCommand cmd = new SqlCommand("SELECT * FROM vw_DataPC", localConn);
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+            }
+            return dt;
+        }
+
+        public DataTable GetTierComboBox()
+        {
+            DataTable dt = new DataTable();
+            using (SqlConnection localConn = new SqlConnection(connectionString))
+            {
+                // Menggunakan SP sp_GetTierComboBox
+                SqlCommand cmd = new SqlCommand("sp_GetTierComboBox", localConn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+            }
+            return dt;
+        }
+
+        public DataTable SearchMasterPC(string keyword)
+        {
+            DataTable dt = new DataTable();
+            using (SqlConnection localConn = new SqlConnection(connectionString))
+            {
+                // Menggunakan SP sp_SearchMasterPC
+                SqlCommand cmd = new SqlCommand("sp_SearchMasterPC", localConn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@search", "%" + keyword + "%");
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+            }
+            return dt;
+        }
+
+        public void InsertMasterPC(int idTier, string nomorPc, string status)
+        {
+            using (SqlConnection localConn = new SqlConnection(connectionString))
+            {
+                // Menggunakan SP sp_InsertMasterPC
+                SqlCommand cmd = new SqlCommand("sp_InsertMasterPC", localConn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@tier", idTier);
+                cmd.Parameters.AddWithValue("@nomor", nomorPc);
+                cmd.Parameters.AddWithValue("@status", status);
+
+                localConn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void UpdateMasterPC(int idTier, string nomorPc, string status, int idPc)
+        {
+            using (SqlConnection localConn = new SqlConnection(connectionString))
+            {
+                // Menggunakan SP sp_UpdateMasterPC
+                SqlCommand cmd = new SqlCommand("sp_UpdateMasterPC", localConn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@tier", idTier);
+                cmd.Parameters.AddWithValue("@nomor", nomorPc);
+                cmd.Parameters.AddWithValue("@status", status);
+                cmd.Parameters.AddWithValue("@id", idPc);
+
+                localConn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public void DeleteMasterPC(int idPc)
+        {
+            using (SqlConnection localConn = new SqlConnection(connectionString))
+            {
+                // Menggunakan SP sp_DeleteMasterPC
+                SqlCommand cmd = new SqlCommand("sp_DeleteMasterPC", localConn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@id", idPc);
+
+                localConn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
+        public int CountMasterPC()
+        {
+            using (SqlConnection localConn = new SqlConnection(connectionString))
+            {
+                // Menggunakan SP sp_CountMasterPC_Output
+                SqlCommand cmd = new SqlCommand("sp_CountMasterPC_Output", localConn);
+                cmd.CommandType = CommandType.StoredProcedure;
+
+                SqlParameter outputParam = new SqlParameter("@Total", SqlDbType.Int);
+                outputParam.Direction = ParameterDirection.Output;
+                cmd.Parameters.Add(outputParam);
+
+                localConn.Open();
+                cmd.ExecuteNonQuery();
+
+                return Convert.ToInt32(outputParam.Value);
+            }
+        }
+
+        public void ResetMasterPC()
+        {
+            using (SqlConnection localConn = new SqlConnection(connectionString))
+            {
+                // Query reset dari tabel backup
+                string query = @"
+            IF OBJECT_ID('dbo.Master_PC_Backup') IS NOT NULL
+            BEGIN
+                DELETE FROM dbo.Master_PC;
+                SET IDENTITY_INSERT dbo.Master_PC ON;
+                INSERT INTO dbo.Master_PC (id_pc, id_tier, nomor_pc, status)
+                SELECT id_pc, id_tier, nomor_pc, status FROM dbo.Master_PC_Backup;
+                SET IDENTITY_INSERT dbo.Master_PC OFF;
+            END";
+                SqlCommand cmd = new SqlCommand(query, localConn);
+                localConn.Open();
+                cmd.ExecuteNonQuery();
+            }
+        }
+
         public void ProsesPembelianVoucher(int idUser, int idTier, int idPc, int durasiJam, int totalBayar, out string kodeVoucherAwal)
         {
             // 1. Generate Kode Voucher Acak (6 Karakter)
