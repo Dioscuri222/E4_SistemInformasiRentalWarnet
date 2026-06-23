@@ -67,6 +67,10 @@ namespace Sistem_Warnet
 
             SqlDataAdapter da = new SqlDataAdapter(cmd);
             DataTable dtStruk = new DataTable();
+
+            // KUNCI UTAMA: Beri nama tabel agar dikenali oleh Crystal Reports
+            dtStruk.TableName = "sp_CetakStruk;1";
+
             da.Fill(dtStruk);
 
             conn.Close();
