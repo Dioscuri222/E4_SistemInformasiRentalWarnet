@@ -89,3 +89,22 @@ BEGIN
     WHERE v.kode_voucher = @kode_voucher
 END
 GO
+
+
+USE DBWarnet
+-- Untuk melihat Pendapatan per Tier PC
+CREATE PROCEDURE sp_StatistikPendapatanTier
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    -- Menggunakan LEFT JOIN agar tier yang belum pernah laku tetap muncul dengan nilai 0
+    SELECT 
+        t.nama_tier, 
+        ISNULL(SUM(tp.total_bayar), 0) AS total_pendapatan,
+        COUNT(tp.id_transaksi) AS jumlah_transaksi
+    FROM Tier_PC t
+    LEFT JOIN Transaksi_Pembelian tp ON t.id_tier = tp.id_tier
+    GROUP BY t.nama_tier;
+END
+GO
