@@ -244,6 +244,19 @@ namespace Sistem_Warnet
             }
         }
 
+        public DataTable GetStatistikPendapatanTier()
+        {
+            DataTable dt = new DataTable();
+            using (SqlConnection localConn = new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("sp_StatistikPendapatanTier", localConn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dt);
+            }
+            return dt;
+        }
+
         public DataTable CetakStrukKasir(string kodeVoucher)
         {
             if (conn.State == System.Data.ConnectionState.Closed) conn.Open();

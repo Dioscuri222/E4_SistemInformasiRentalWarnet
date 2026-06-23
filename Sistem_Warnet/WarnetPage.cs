@@ -230,5 +230,12 @@ namespace Sistem_Warnet
         private void cmbStatus_SelectedIndexChanged(object sender, EventArgs e) { }
         private void button1_Click(object sender, EventArgs e) { }
         private void btnTestInjection_Click(object sender, EventArgs e) { }
+
+        private void btnDashboard_Click(object sender, EventArgs e)
+        {
+            Dashboard_Form dashboard = new Dashboard_Form();
+            // Gunakan ShowDialog agar form utama tidak bisa di-klik selama dashboard terbuka
+            dashboard.ShowDialog();
+        }
     }
 }
