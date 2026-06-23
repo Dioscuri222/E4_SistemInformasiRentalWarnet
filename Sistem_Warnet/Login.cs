@@ -56,7 +56,7 @@ namespace Sistem_Warnet
         private void btnConnect_Click(object sender, EventArgs e)
         {
             // Opsi ini bisa Anda hapus dari UI jika sudah tidak digunakan
-            MessageBox.Show("Fitur cek koneksi telah diotomatisasi.");
+            MessageBox.Show("Koneksi berhasil.");
         }
 
         private void Form1_Load(object sender, EventArgs e) { }

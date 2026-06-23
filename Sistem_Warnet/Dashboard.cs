@@ -16,7 +16,7 @@ namespace Sistem_Warnet
 
         private void Dashboard_Form_Load(object sender, EventArgs e)
         {
-            UIHelper.FormatForm(this);
+           // UIHelper.FormatForm(this);
 
             // 1. Matikan sementara trigger event agar tidak error saat memasukkan data
             cmbFilter.SelectedIndexChanged -= cmbFilter_SelectedIndexChanged;
