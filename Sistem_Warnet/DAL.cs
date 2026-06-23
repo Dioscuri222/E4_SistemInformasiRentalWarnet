@@ -244,13 +244,17 @@ namespace Sistem_Warnet
             }
         }
 
-        public DataTable GetStatistikPendapatanTier()
+        public DataTable GetStatistikPendapatanTier(string filter)
         {
             DataTable dt = new DataTable();
             using (SqlConnection localConn = new SqlConnection(connectionString))
             {
                 SqlCommand cmd = new SqlCommand("sp_StatistikPendapatanTier", localConn);
                 cmd.CommandType = CommandType.StoredProcedure;
+
+                // Mengirimkan parameter filter ke SQL Server
+                cmd.Parameters.AddWithValue("@filter", filter);
+
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
             }

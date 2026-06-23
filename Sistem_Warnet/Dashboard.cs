@@ -16,49 +16,66 @@ namespace Sistem_Warnet
 
         private void Dashboard_Form_Load(object sender, EventArgs e)
         {
-            // Terapkan UI Helper jika Anda ingin warnanya senada
             UIHelper.FormatForm(this);
-            LoadGrafikPendapatan();
+
+            // 1. Matikan sementara trigger event agar tidak error saat memasukkan data
+            cmbFilter.SelectedIndexChanged -= cmbFilter_SelectedIndexChanged;
+
+            // 2. Isi ComboBox dengan pilihan filter
+            cmbFilter.Items.Clear();
+            cmbFilter.Items.Add("Semua Waktu");
+            cmbFilter.Items.Add("Hari Ini");
+            cmbFilter.Items.Add("Minggu Ini");
+            cmbFilter.Items.Add("Bulan Ini");
+
+            // 3. Nyalakan lagi trigger event-nya
+            cmbFilter.SelectedIndexChanged += cmbFilter_SelectedIndexChanged;
+
+            // 4. Pilih default: "Semua Waktu" (Ini akan otomatis memanggil grafik pertama kali)
+            cmbFilter.SelectedIndex = 0;
         }
 
-        private void LoadGrafikPendapatan()
+        // EVENT: Saat pilihan dropdown diganti
+        private void cmbFilter_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            // Ambil teks yang sedang dipilih dan lempar ke fungsi load grafik
+            string filterPilihan = cmbFilter.Text;
+            LoadGrafikPendapatan(filterPilihan);
+        }
+
+        // Menerima parameter filter
+        private void LoadGrafikPendapatan(string filterWaktu)
         {
             try
             {
-                DataTable dt = dbLogic.GetStatistikPendapatanTier();
+                // Panggil DAL dengan mengirimkan filter
+                DataTable dt = dbLogic.GetStatistikPendapatanTier(filterWaktu);
 
-                // 1. Bersihkan grafik bawaan (Dummy)
                 chartPendapatan.Series.Clear();
                 chartPendapatan.Titles.Clear();
 
-                // 2. Buat Seri Grafik Baru
                 Series series = new Series("Pendapatan");
-
-                // Ubah menjadi SeriesChartType.Pie jika ingin bentuk lingkaran
                 series.ChartType = SeriesChartType.Column;
-                series.IsValueShownAsLabel = true; // Memunculkan nominal di atas batang
-                series.LabelFormat = "N0"; // Format pemisah ribuan
+                series.IsValueShownAsLabel = true;
+                series.LabelFormat = "N0";
 
                 int totalKeseluruhan = 0;
 
-                // 3. Masukkan data dari database ke dalam sumbu X dan Y grafik
                 foreach (DataRow row in dt.Rows)
                 {
                     string namaTier = row["nama_tier"].ToString();
                     int pendapatan = Convert.ToInt32(row["total_pendapatan"]);
 
-                    // X = Nama Tier, Y = Pendapatan
                     series.Points.AddXY(namaTier, pendapatan);
-
-                    // Kalkulasi total kumulatif
                     totalKeseluruhan += pendapatan;
                 }
 
-                // 4. Terapkan ke komponen layar
                 chartPendapatan.Series.Add(series);
-                chartPendapatan.Titles.Add("Statistik Pendapatan Berdasarkan Tier PC");
 
-                lblTotalPendapatan.Text = "Total Pendapatan Keseluruhan: Rp " + totalKeseluruhan.ToString("N0");
+                // Ubah judul agar sesuai dengan filter
+                chartPendapatan.Titles.Add($"Statistik Pendapatan Berdasarkan Tier PC ({filterWaktu.ToUpper()})");
+
+                lblTotalPendapatan.Text = $"Total Pendapatan {filterWaktu}: Rp " + totalKeseluruhan.ToString("N0");
             }
             catch (Exception ex)
             {

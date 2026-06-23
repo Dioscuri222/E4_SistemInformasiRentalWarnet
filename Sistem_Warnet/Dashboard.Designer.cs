@@ -28,61 +28,69 @@
         /// </summary>
         private void InitializeComponent()
         {
-            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea1 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
-            System.Windows.Forms.DataVisualization.Charting.Legend legend1 = new System.Windows.Forms.DataVisualization.Charting.Legend();
-            System.Windows.Forms.DataVisualization.Charting.Series series1 = new System.Windows.Forms.DataVisualization.Charting.Series();
+            System.Windows.Forms.DataVisualization.Charting.ChartArea chartArea2 = new System.Windows.Forms.DataVisualization.Charting.ChartArea();
+            System.Windows.Forms.DataVisualization.Charting.Legend legend2 = new System.Windows.Forms.DataVisualization.Charting.Legend();
+            System.Windows.Forms.DataVisualization.Charting.Series series2 = new System.Windows.Forms.DataVisualization.Charting.Series();
             this.chartPendapatan = new System.Windows.Forms.DataVisualization.Charting.Chart();
             this.lblTotalPendapatan = new System.Windows.Forms.Label();
             this.label1 = new System.Windows.Forms.Label();
+            this.cmbFilter = new System.Windows.Forms.ComboBox();
             ((System.ComponentModel.ISupportInitialize)(this.chartPendapatan)).BeginInit();
             this.SuspendLayout();
             // 
             // chartPendapatan
             // 
-            chartArea1.Name = "ChartArea1";
-            this.chartPendapatan.ChartAreas.Add(chartArea1);
-            legend1.Name = "Legend1";
-            this.chartPendapatan.Legends.Add(legend1);
-            this.chartPendapatan.Location = new System.Drawing.Point(69, 59);
-            this.chartPendapatan.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
+            chartArea2.Name = "ChartArea1";
+            this.chartPendapatan.ChartAreas.Add(chartArea2);
+            legend2.Name = "Legend1";
+            this.chartPendapatan.Legends.Add(legend2);
+            this.chartPendapatan.Location = new System.Drawing.Point(12, 29);
             this.chartPendapatan.Name = "chartPendapatan";
-            series1.ChartArea = "ChartArea1";
-            series1.Legend = "Legend1";
-            series1.Name = "Series1";
-            this.chartPendapatan.Series.Add(series1);
-            this.chartPendapatan.Size = new System.Drawing.Size(900, 449);
+            series2.ChartArea = "ChartArea1";
+            series2.Legend = "Legend1";
+            series2.Name = "Series1";
+            this.chartPendapatan.Series.Add(series2);
+            this.chartPendapatan.Size = new System.Drawing.Size(664, 365);
             this.chartPendapatan.TabIndex = 0;
             this.chartPendapatan.Text = "chart1";
             // 
             // lblTotalPendapatan
             // 
             this.lblTotalPendapatan.AutoSize = true;
-            this.lblTotalPendapatan.Location = new System.Drawing.Point(65, 527);
-            this.lblTotalPendapatan.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.lblTotalPendapatan.Location = new System.Drawing.Point(9, 409);
             this.lblTotalPendapatan.Name = "lblTotalPendapatan";
-            this.lblTotalPendapatan.Size = new System.Drawing.Size(70, 16);
+            this.lblTotalPendapatan.Size = new System.Drawing.Size(59, 13);
             this.lblTotalPendapatan.TabIndex = 1;
             this.lblTotalPendapatan.Text = "NOMINAL:";
             // 
             // label1
             // 
             this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(444, 28);
-            this.label1.Margin = new System.Windows.Forms.Padding(4, 0, 4, 0);
+            this.label1.Location = new System.Drawing.Point(293, 4);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(150, 16);
+            this.label1.Size = new System.Drawing.Size(120, 13);
             this.label1.TabIndex = 2;
             this.label1.Text = "PENDAPATAN CHART";
             // 
+            // cmbFilter
+            // 
+            this.cmbFilter.BackColor = System.Drawing.SystemColors.Info;
+            this.cmbFilter.FormattingEnabled = true;
+            this.cmbFilter.Location = new System.Drawing.Point(682, 29);
+            this.cmbFilter.Name = "cmbFilter";
+            this.cmbFilter.Size = new System.Drawing.Size(110, 21);
+            this.cmbFilter.TabIndex = 3;
+            this.cmbFilter.SelectedIndexChanged += new System.EventHandler(this.Dashboard_Form_Load);
+            // 
             // Dashboard_Form
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(1067, 554);
+            this.ClientSize = new System.Drawing.Size(800, 450);
+            this.Controls.Add(this.cmbFilter);
             this.Controls.Add(this.label1);
             this.Controls.Add(this.lblTotalPendapatan);
             this.Controls.Add(this.chartPendapatan);
-            this.Margin = new System.Windows.Forms.Padding(4, 4, 4, 4);
             this.Name = "Dashboard_Form";
             this.Text = "Dashboard";
             this.Load += new System.EventHandler(this.Dashboard_Form_Load);
@@ -97,5 +105,6 @@
         private System.Windows.Forms.DataVisualization.Charting.Chart chartPendapatan;
         private System.Windows.Forms.Label lblTotalPendapatan;
         private System.Windows.Forms.Label label1;
+        private System.Windows.Forms.ComboBox cmbFilter;
     }
 }
