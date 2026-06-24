@@ -133,17 +133,8 @@ namespace Sistem_Warnet
         {
             using (SqlConnection localConn = new SqlConnection(connectionString))
             {
-                // Query reset dari tabel backup
-                string query = @"
-            IF OBJECT_ID('dbo.Master_PC_Backup') IS NOT NULL
-            BEGIN
-                DELETE FROM dbo.Master_PC;
-                SET IDENTITY_INSERT dbo.Master_PC ON;
-                INSERT INTO dbo.Master_PC (id_pc, id_tier, nomor_pc, status)
-                SELECT id_pc, id_tier, nomor_pc, status FROM dbo.Master_PC_Backup;
-                SET IDENTITY_INSERT dbo.Master_PC OFF;
-            END";
-                SqlCommand cmd = new SqlCommand(query, localConn);
+                SqlCommand cmd = new SqlCommand("sp_ResetMasterPC", localConn);
+                cmd.CommandType = CommandType.StoredProcedure;
                 localConn.Open();
                 cmd.ExecuteNonQuery();
             }
@@ -182,13 +173,8 @@ namespace Sistem_Warnet
             DataTable dt = new DataTable();
             using (SqlConnection localConn = new SqlConnection(connectionString))
             {
-                string query = @"
-            SELECT p.id_pc, p.nomor_pc, t.id_tier, t.nama_tier, t.harga_per_jam
-            FROM Master_PC p
-            INNER JOIN Tier_PC t ON p.id_tier = t.id_tier
-            WHERE p.status = 'Tersedia'";
-
-                SqlCommand cmd = new SqlCommand(query, localConn);
+                SqlCommand cmd = new SqlCommand("sp_GetPCTersedia", localConn);
+                cmd.CommandType = CommandType.StoredProcedure;
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
             }
@@ -354,23 +340,10 @@ namespace Sistem_Warnet
             DataTable dt = new DataTable();
             using (SqlConnection localConn = new SqlConnection(connectionString))
             {
-                string query = @"
-                    SELECT 
-                        t.tgl_transaksi AS [Tanggal Transaksi],
-                        tr.nama_tier AS [Tier PC],
-                        t.durasi_jam AS [Durasi Jam],
-                        t.total_bayar AS [Total Bayar],
-                        u.username AS [Operator]
-                    FROM Transaksi_Pembelian t
-                    INNER JOIN Tier_PC tr ON t.id_tier = tr.id_tier
-                    INNER JOIN Pengguna_Staf u ON t.id_user = u.id_user
-                    WHERE t.tgl_transaksi >= @tglMulai AND t.tgl_transaksi <= @tglSelesai
-                    ORDER BY t.tgl_transaksi DESC";
-
-                SqlCommand cmd = new SqlCommand(query, localConn);
+                SqlCommand cmd = new SqlCommand("sp_GetRekapTransaksi", localConn);
+                cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@tglMulai", tanggalMulai.Date);
                 cmd.Parameters.AddWithValue("@tglSelesai", tanggalSelesai.Date.AddDays(1).AddSeconds(-1));
-                
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
             }
