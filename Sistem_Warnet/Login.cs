@@ -1,107 +1,85 @@
-﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Data.SqlClient;
-using System.Drawing;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+using System;
+using System.Data; // Wajib ditambahkan untuk menggunakan DataRow
 using System.Windows.Forms;
-using static Sistem_Warnet.Warnet_Form;
 
 namespace Sistem_Warnet
 {
     public partial class Login_Form : Form
     {
-        private readonly SqlConnection conn;
-        private readonly string connectionString =
-            "Data Source=FASYALTP\\FASYALTP;Initial Catalog=DBWarnet;Integrated Security=True";
-
-        private void ConnectDatabase()
-        {
-            try
-            {
-                if (conn.State == System.Data.ConnectionState.Closed)
-
-                {
-                    conn.Open();
-                }
-
-                MessageBox.Show("Koneksi berhasil!");
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Koneksi gagal: " + ex.Message);
-            }
-
-        }
-
+        private DAL dbLogic = new DAL();
 
         public Login_Form()
         {
             InitializeComponent();
-            conn = new SqlConnection(connectionString);
-
             txtPassword.UseSystemPasswordChar = true;
-        }
-
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label1_Click(object sender, EventArgs e)
-        {
-
         }
 
         private void btnLogin_Click(object sender, EventArgs e)
         {
-            SqlCommand cmd = new SqlCommand("sp_Login", conn);
-            cmd.CommandType = CommandType.StoredProcedure;
-
-            cmd.Parameters.AddWithValue("@username", txtUsername.Text);
-            cmd.Parameters.AddWithValue("@password", txtPassword.Text);
-
-            SqlDataReader reader = cmd.ExecuteReader();
-
-            if (reader.Read())
+            try
             {
-                Staff loggedInUser = new Staff();
-                loggedInUser.IdUser = Convert.ToInt32(reader["id_user"]);
-                loggedInUser.Username = reader["username"].ToString();
-                loggedInUser.Role = reader["role"].ToString();
+                string inputUsername = txtUsername.Text.Trim();
+                string inputPassword = txtPassword.Text.Trim();
 
-                reader.Close();
-                this.Hide();
+                // 1. Cek apakah ini login Admin atau Operator
+                Staff loggedInUser = dbLogic.CekLogin(inputUsername, inputPassword);
 
-                // Mengarahkan Form berdasarkan Role dari objek loggedInUser
-                if (loggedInUser.Role == "Admin")
+                if (loggedInUser != null)
                 {
-                    Warnet_Form adminForm = new Warnet_Form();
-                    adminForm.Show();
+                    this.Hide();
+                    if (loggedInUser.Role == "Admin")
+                    {
+                        new Warnet_Form().Show();
+                    }
+                    else
+                    {
+                        new Operator_Form(loggedInUser).Show();
+                    }
+                    return; // Hentikan eksekusi di sini jika berhasil login sebagai staff
+                }
+
+                // 2. Jika bukan staff, cek apakah input di kolom Username adalah Kode Voucher Pelanggan
+                DataRow sessionData = dbLogic.LoginClient(inputUsername);
+
+                if (sessionData != null)
+                {
+                    int sisaDetik = Convert.ToInt32(sessionData["sisa_detik_aktual"]);
+                    string nomorPc = sessionData["nomor_pc"].ToString();
+
+                    if (sisaDetik <= 0)
+                    {
+                        MessageBox.Show("Waktu voucher Anda sudah habis!", "Akses Ditolak", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                        dbLogic.LogoutClient(inputUsername); // Tutup sesi otomatis di database
+                    }
+                    else
+                    {
+                        this.Hide();
+                        // Buka Dashboard Client
+                        ClientDashboard dashboard = new ClientDashboard(inputUsername, nomorPc, sisaDetik);
+                        dashboard.Show();
+                    }
                 }
                 else
                 {
-                    // Membuka Form Staff sambil mengirimkan data objek staff tadi
-                    Operator_Form staffForm = new Operator_Form(loggedInUser);
-                    staffForm.Show();
+                    // 3. Jika bukan staff dan bukan voucher yang valid
+                    MessageBox.Show("Login Gagal! Username/Password salah, atau Kode Voucher tidak ditemukan/habis.", "Gagal", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
             }
-            else
+            catch (Exception ex)
             {
-                MessageBox.Show("Login Gagal!");
+                MessageBox.Show("Koneksi gagal: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-            reader.Close();
         }
 
         private void btnConnect_Click(object sender, EventArgs e)
         {
-            ConnectDatabase();
+            MessageBox.Show("Koneksi berhasil.");
         }
 
-
+        private void Form1_Load(object sender, EventArgs e)
+        {
+            UIHelper.ApplyTheme(this);
+        }
+        private void label1_Click(object sender, EventArgs e) { }
     }
 }

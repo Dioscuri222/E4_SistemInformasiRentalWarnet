@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -13,31 +13,19 @@ namespace Sistem_Warnet
 {
     public partial class Operator_Form : Form
     {
-        private string connectionString = "Data Source=FASYALTP\\FASYALTP;Initial Catalog=DBWarnet;Integrated Security=True";
-        private SqlConnection conn;
+        private DAL dbLogic = new DAL();
         private BindingSource bindingSource = new BindingSource();
-
         public Staff currentStaff;
+
         public Operator_Form(Staff user)
         {
             InitializeComponent();
-            conn = new SqlConnection(connectionString);
             this.currentStaff = user;
         }
 
         private void Staff_Form_Load(object sender, EventArgs e)
         {
-
-            // === APLIKASIKAN TEMA UI ===
-            UIHelper.FormatForm(this);
-            UIHelper.FormatGrid(dataGridView1);
-
-            // Tombol-tombol utama
-            UIHelper.FormatPrimaryButton(btnSearch);
-
-            // Tombol peringatan
-            UIHelper.FormatDangerButton(btnLogout);
-            // ============================
+            UIHelper.ApplyTheme(this);
 
             dataGridView1.ReadOnly = true;
             dataGridView1.AllowUserToAddRows = false;
@@ -50,19 +38,9 @@ namespace Sistem_Warnet
         {
             try
             {
-                if (conn.State == ConnectionState.Closed) conn.Open();
-
-                string query = "SELECT * FROM vw_DataPC";
-                SqlCommand cmd = new SqlCommand(query, conn);
-
-                // Menerapkan Binding dan Disconnected Architecture
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-
+                DataTable dt = dbLogic.GetAllMasterPC();
                 bindingSource.DataSource = dt;
                 dataGridView1.DataSource = bindingSource;
-
                 bindingNavigator1.BindingSource = bindingSource;
             }
             catch (Exception ex)
@@ -75,15 +53,8 @@ namespace Sistem_Warnet
         {
             try
             {
-                if (conn.State == ConnectionState.Closed) conn.Open();
-                SqlCommand cmd = new SqlCommand("sp_SearchMasterPC", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
-                cmd.Parameters.AddWithValue("@search", "%" + txtPencarian.Text + "%");
-
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-                dataGridView1.DataSource = dt;
+                DataTable dt = dbLogic.SearchMasterPC(txtPencarian.Text);
+                dataGridView1.DataSource = dt; // Operator langsung timpa ke DataSource
             }
             catch (Exception ex)
             {
@@ -91,21 +62,9 @@ namespace Sistem_Warnet
             }
         }
 
-        private void btnLogout_Click(object sender, EventArgs e)
-        {
-            MessageBox.Show("berhasil logout!");
-            new Login_Form().Show();
-            this.Close();
-        }
-
         private void btnRefresh_Click(object sender, EventArgs e)
         {
             LoadData();
-        }
-
-        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e)
-        {
-
         }
 
         private void btnPesan_Click(object sender, EventArgs e)
@@ -114,5 +73,13 @@ namespace Sistem_Warnet
             formTransaksi.Show();
             this.Hide();
         }
+
+        private void btnLogout_Click(object sender, EventArgs e)
+        {
+            new Login_Form().Show();
+            this.Close();
+        }
+
+        private void dataGridView1_CellContentClick(object sender, DataGridViewCellEventArgs e) { }
     }
 }

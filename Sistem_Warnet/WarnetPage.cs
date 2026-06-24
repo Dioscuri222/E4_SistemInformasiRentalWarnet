@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -10,43 +10,31 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Text.RegularExpressions;
 using System.Windows.Forms;
+using System.IO;
+using ExcelDataReader;
+
 
 namespace Sistem_Warnet
 {
     public partial class Warnet_Form : Form
     {
-        private string connectionString = "Data Source=FASYALTP\\FASYALTP;Initial Catalog=DBWarnet;Integrated Security=True";
-        private SqlConnection conn;
+        // 1. Panggil class DAL, hapus SqlConnection mentah
+        private DAL dbLogic = new DAL();
         private BindingSource bindingSource = new BindingSource();
+
         public Warnet_Form()
         {
             InitializeComponent();
-            conn = new SqlConnection(connectionString);
         }
 
         private void LoadData()
         {
             try
             {
-                if (conn.State == ConnectionState.Closed) conn.Open();
-
-                string query = "SELECT * FROM vw_DataPC";
-                SqlCommand cmd = new SqlCommand(query, conn);
-
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-
-                // Fill akan otomatis mengeksekusi query dan membuatkan kolom ID, Nomor, Tier, Status
-                da.Fill(dt);
-
-                // Proses Binding: Menempelkan tabel ke source, lalu source ke grid
+                DataTable dt = dbLogic.GetAllMasterPC();
                 bindingSource.DataSource = dt;
                 dataGridView1.DataSource = bindingSource;
-
                 bindingNavigator1.BindingSource = bindingSource;
-
-                // Bug DataBinding Update dan Simpan jadi error tetapi tersimpan sementara????
-                //BindingControls();
             }
             catch (Exception ex)
             {
@@ -58,21 +46,10 @@ namespace Sistem_Warnet
         {
             try
             {
-                if (conn.State == ConnectionState.Closed) conn.Open();
-
-                // Refactoring pada LoadTierToComboBox
-                SqlCommand cmd = new SqlCommand("sp_GetTierComboBox", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                SqlDataReader reader = cmd.ExecuteReader();
-                DataTable dt = new DataTable();
-                dt.Load(reader);
-
+                DataTable dt = dbLogic.GetTierComboBox();
                 cmbTier.DataSource = dt;
                 cmbTier.DisplayMember = "nama_tier";
                 cmbTier.ValueMember = "id_tier";
-
-                reader.Close();
             }
             catch (Exception ex)
             {
@@ -82,20 +59,7 @@ namespace Sistem_Warnet
 
         private void Warnet_Form_Load(object sender, EventArgs e)
         {
-
-            // === APLIKASIKAN TEMA UI ===
-            UIHelper.FormatForm(this);
-            UIHelper.FormatGrid(dataGridView1);
-
-            // Tombol-tombol utama
-            UIHelper.FormatPrimaryButton(btnSimpan);
-            UIHelper.FormatPrimaryButton(btnUpdate);
-            UIHelper.FormatPrimaryButton(btnSearch);
-
-            // Tombol peringatan
-            UIHelper.FormatDangerButton(btnDelete);
-            UIHelper.FormatDangerButton(btnLogout);
-            // ============================
+            UIHelper.ApplyTheme(this);
 
             cmbStatus.Items.Clear();
             cmbStatus.Items.Add("Tersedia");
@@ -105,35 +69,11 @@ namespace Sistem_Warnet
             LoadData();
         }
 
-        private void label2_Click(object sender, EventArgs e)
-        {
-
-        }
-
-        private void label4_Click(object sender, EventArgs e)
-        {
-
-        }
-
         private void btnSearch_Click(object sender, EventArgs e)
         {
             try
             {
-                if (conn.State == ConnectionState.Closed) conn.Open();
-
-                SqlCommand cmd = new SqlCommand("sp_SearchMasterPC", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                // Parameter pencarian
-                cmd.Parameters.AddWithValue("@search", "%" + txtPencarian.Text + "%");
-
-                // Gunakan DataAdapter (Disconnected Architecture), bukan DataReader
-                SqlDataAdapter da = new SqlDataAdapter(cmd);
-                DataTable dt = new DataTable();
-                da.Fill(dt);
-
-                // Masukkan hasil pencarian langsung ke BindingSource
-                // DataGridView akan otomatis menyesuaikan diri tanpa perlu di-Clear() manual!
+                DataTable dt = dbLogic.SearchMasterPC(txtPencarian.Text);
                 bindingSource.DataSource = dt;
 
                 if (dt.Rows.Count == 0)
@@ -149,55 +89,20 @@ namespace Sistem_Warnet
 
         private void btnSimpan_Click(object sender, EventArgs e)
         {
-            // 1. Ambil input dan bersihkan spasi
             string input = txtNoPC.Text.ToUpper().Trim();
 
-            // 2. Cek Kosong
-            if (string.IsNullOrEmpty(input))
-            {
-                MessageBox.Show("Nomor PC tidak boleh kosong!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtNoPC.Focus();
-                return;
-            }
+            // Validasi Input
+            if (string.IsNullOrEmpty(input)) { txtNoPC.Focus(); return; }
+            if (!Regex.IsMatch(input, @"^(PC|VIP)-\d+$")) { MessageBox.Show("Format tidak valid!"); txtNoPC.Focus(); return; }
 
-            // 3. Validasi Induk (Regex memblokir karakter aneh, spasi, dan format yang salah sekaligus)
-            if (!Regex.IsMatch(input, @"^(PC|VIP)-\d+$"))
-            {
-                MessageBox.Show("Format Nomor PC tidak valid!\n\nAturan:\n1. Harus diawali 'PC-' atau 'VIP-'\n2. Hanya boleh diikuti oleh Angka.\n\nContoh yang benar: PC-01, VIP-02", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtNoPC.Focus();
-                return;
-            }
-
-            // 4. Validasi Keselarasan Prefix dan Tier
             string tierTerpilih = cmbTier.Text;
+            if (input.StartsWith("PC-") && tierTerpilih != "Reguler") { MessageBox.Show("Harus tier Reguler!"); cmbTier.Focus(); return; }
+            if (input.StartsWith("VIP-") && tierTerpilih != "VIP") { MessageBox.Show("Harus tier VIP!"); cmbTier.Focus(); return; }
 
-            if (input.StartsWith("PC-") && tierTerpilih != "Reguler")
-            {
-                MessageBox.Show("Nomor dengan awalan 'PC-' harus dimasukkan ke tier Reguler!", "Ketidakcocokan Tier", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                cmbTier.Focus();
-                return;
-            }
-
-            if (input.StartsWith("VIP-") && tierTerpilih != "VIP")
-            {
-                MessageBox.Show("Nomor dengan awalan 'VIP-' harus dimasukkan ke tier VIP!", "Ketidakcocokan Tier", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                cmbTier.Focus();
-                return;
-            }
             try
             {
-                // Refactoring Simpan
-                SqlCommand cmd = new SqlCommand("sp_InsertMasterPC", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
-
-
-                // SQLi prevention dengan parameterized query, sehingga input dianggap sebagai data, bukan kode
-                cmd.Parameters.AddWithValue("@tier", cmbTier.SelectedValue);
-                cmd.Parameters.AddWithValue("@nomor", input);
-                cmd.Parameters.AddWithValue("@status", cmbStatus.Text);
-
-                if (conn.State == ConnectionState.Closed) conn.Open();
-                cmd.ExecuteNonQuery();
+                int idTier = Convert.ToInt32(cmbTier.SelectedValue);
+                dbLogic.InsertMasterPC(idTier, input, cmbStatus.Text);
 
                 MessageBox.Show("Data berhasil disimpan!");
                 LoadData();
@@ -208,63 +113,80 @@ namespace Sistem_Warnet
             }
         }
 
-        private void button1_Click(object sender, EventArgs e)
+        private void btnUpdate_Click(object sender, EventArgs e)
         {
+            if (dataGridView1.SelectedRows.Count == 0) { MessageBox.Show("Pilih data!"); return; }
+            if (MessageBox.Show("Yakin ingin mengupdate data?", "Konfirmasi", MessageBoxButtons.YesNo) == DialogResult.No) return;
 
-        }
+            string input = txtNoPC.Text.ToUpper().Trim();
 
-        private void btnTotal_Click(object sender, EventArgs e)
-        {
+            // Validasi Input
+            if (string.IsNullOrEmpty(input)) { txtNoPC.Focus(); return; }
+            if (!Regex.IsMatch(input, @"^(PC|VIP)-\d+$")) { MessageBox.Show("Format tidak valid!"); txtNoPC.Focus(); return; }
+
+            string tierTerpilih = cmbTier.Text;
+            if (input.StartsWith("PC-") && tierTerpilih != "Reguler") { MessageBox.Show("Harus tier Reguler!"); cmbTier.Focus(); return; }
+            if (input.StartsWith("VIP-") && tierTerpilih != "VIP") { MessageBox.Show("Harus tier VIP!"); cmbTier.Focus(); return; }
+
             try
             {
-                if (conn.State == ConnectionState.Closed) conn.Open();
+                int idTier = Convert.ToInt32(cmbTier.SelectedValue);
+                int idPc = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["id_pc"].Value);
 
-                SqlCommand cmd = new SqlCommand("sp_CountMasterPC_Output", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
+                dbLogic.UpdateMasterPC(idTier, input, cmbStatus.Text, idPc);
 
-                SqlParameter outputParam = new SqlParameter("@Total", SqlDbType.Int);
-                outputParam.Direction = ParameterDirection.Output;
-                cmd.Parameters.Add(outputParam);
-
-                cmd.ExecuteNonQuery();
-
-                lblTotal.Text = "Total PC Terdaftar: " + outputParam.Value.ToString();
+                MessageBox.Show("Data berhasil diupdate!");
+                LoadData();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Gagal Hitung: " + ex.Message);
+                MessageBox.Show("Gagal Update: " + ex.Message);
             }
-
         }
 
         private void btnDelete_Click(object sender, EventArgs e)
         {
-            if (dataGridView1.SelectedRows.Count == 0)
-            {
-                MessageBox.Show("Pilih data yang ingin dihapus!");
-                return;
-            }
+            if (dataGridView1.SelectedRows.Count == 0) { MessageBox.Show("Pilih data!"); return; }
 
-            DialogResult result = MessageBox.Show("Yakin ingin menghapus data?", "Konfirmasi", MessageBoxButtons.YesNo);
-            if (result == DialogResult.Yes)
+            if (MessageBox.Show("Yakin ingin menghapus data?", "Konfirmasi", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 try
                 {
-                    string id = dataGridView1.SelectedRows[0].Cells["id_pc"].Value.ToString();
-
-                    // Refactoring pada Delete
-                    SqlCommand cmd = new SqlCommand("sp_DeleteMasterPC", conn);
-                    cmd.CommandType = CommandType.StoredProcedure;
-                    cmd.Parameters.AddWithValue("@id", id);
-
-                    if (conn.State == ConnectionState.Closed) conn.Open();
-                    cmd.ExecuteNonQuery();
+                    int idPc = Convert.ToInt32(dataGridView1.SelectedRows[0].Cells["id_pc"].Value);
+                    dbLogic.DeleteMasterPC(idPc);
                     LoadData();
                 }
                 catch (Exception ex)
                 {
                     MessageBox.Show("Gagal Hapus: " + ex.Message);
                 }
+            }
+        }
+
+        private void btnTotal_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                int total = dbLogic.CountMasterPC();
+                lblTotal.Text = "Total PC Terdaftar: " + total;
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal Hitung: " + ex.Message);
+            }
+        }
+
+        private void btnReset_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                dbLogic.ResetMasterPC();
+                MessageBox.Show("Data berhasil direset dari tabel backup!");
+                LoadData();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Reset gagal: " + ex.Message);
             }
         }
 
@@ -278,186 +200,90 @@ namespace Sistem_Warnet
             }
         }
 
-        private void btnConnect_Click(object sender, EventArgs e)
-        {
-            // Memanggil ulang LoadData() agar tidak ada pengulangan kode yang panjang
-            LoadData();
-        }
-
-        private void txtNoPC_TextChanged(object sender, EventArgs e)
-        {
-
-        }
-
         private void cmbTier_SelectedIndexChanged(object sender, EventArgs e)
         {
-            // Mengambil teks yang sedang dipilih, misal: "Reguler" atau "VIP"
             string tierTerpilih = cmbTier.Text;
-
-            // Kita hanya mengisinya otomatis JIKA kotak teksnya kosong, atau jika admin hanya ganti-ganti pilihan Combobox.
             if (string.IsNullOrEmpty(txtNoPC.Text) || txtNoPC.Text == "PC-" || txtNoPC.Text == "VIP-")
             {
-                if (tierTerpilih == "Reguler")
-                {
-                    txtNoPC.Text = "PC-";
-                }
-                else if (tierTerpilih == "VIP")
-                {
-                    txtNoPC.Text = "VIP-";
-                }
+                if (tierTerpilih == "Reguler") txtNoPC.Text = "PC-";
+                else if (tierTerpilih == "VIP") txtNoPC.Text = "VIP-";
 
-                // Pindahkan kursor teks (kedap-kedip) otomatis ke bagian paling belakang (setelah tanda strip)
                 txtNoPC.SelectionStart = txtNoPC.Text.Length;
             }
         }
 
-        private void cmbStatus_SelectedIndexChanged(object sender, EventArgs e)
-        {
-
-        }
-
-        private void btnUpdate_Click(object sender, EventArgs e)
-        {
-            if (dataGridView1.SelectedRows.Count == 0)
-            {
-                MessageBox.Show("Pilih data di tabel yang ingin diubah!");
-                return;
-            }
-            DialogResult result = MessageBox.Show("Yakin ingin mengupdate data?", "Konfirmasi", MessageBoxButtons.YesNo);
-            if (result == DialogResult.No) return;
-
-
-            // 1. Ambil input dan bersihkan spasi
-            string input = txtNoPC.Text.ToUpper().Trim();
-
-            // 2. Cek Kosong
-            if (string.IsNullOrEmpty(input))
-            {
-                MessageBox.Show("Nomor PC tidak boleh kosong!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtNoPC.Focus();
-                return;
-            }
-
-            // 3. Validasi Induk (Regex memblokir karakter aneh, spasi, dan format yang salah sekaligus)
-            if (!Regex.IsMatch(input, @"^(PC|VIP)-\d+$"))
-            {
-                MessageBox.Show("Format Nomor PC tidak valid!\n\nAturan:\n1. Harus diawali 'PC-' atau 'VIP-'\n2. Hanya boleh diikuti oleh Angka.\n\nContoh yang benar: PC-01, VIP-02", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtNoPC.Focus();
-                return;
-            }
-
-            // 4. Validasi Keselarasan Prefix dan Tier
-            string tierTerpilih = cmbTier.Text;
-
-            if (input.StartsWith("PC-") && tierTerpilih != "Reguler")
-            {
-                MessageBox.Show("Nomor dengan awalan 'PC-' harus dimasukkan ke tier Reguler!", "Ketidakcocokan Tier", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                cmbTier.Focus();
-                return;
-            }
-
-            if (input.StartsWith("VIP-") && tierTerpilih != "VIP")
-            {
-                MessageBox.Show("Nomor dengan awalan 'VIP-' harus dimasukkan ke tier VIP!", "Ketidakcocokan Tier", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                cmbTier.Focus();
-                return;
-            }
-
-
-            try
-            {
-                string id = dataGridView1.SelectedRows[0].Cells["id_pc"].Value.ToString();
-
-                // Refactoring pada Update
-                SqlCommand cmd = new SqlCommand("sp_UpdateMasterPC", conn);
-                cmd.CommandType = CommandType.StoredProcedure;
-
-                cmd.Parameters.AddWithValue("@tier", cmbTier.SelectedValue);
-                cmd.Parameters.AddWithValue("@nomor", input);
-                cmd.Parameters.AddWithValue("@status", cmbStatus.Text);
-                cmd.Parameters.AddWithValue("@id", id);
-
-                if (conn.State == ConnectionState.Closed) conn.Open();
-                cmd.ExecuteNonQuery();
-
-                MessageBox.Show("Data berhasil diupdate!");
-                LoadData();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Gagal Update: " + ex.Message);
-            }
-        }
-
+        private void btnConnect_Click(object sender, EventArgs e) { LoadData(); }
         private void btnLogout_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("berhasil logout!");
             new Login_Form().Show();
             this.Close();
         }
 
-        private void BindingControls()
-        {
-            txtNoPC.DataBindings.Clear();
-            cmbTier.DataBindings.Clear();
-            cmbStatus.DataBindings.Clear();
+        // Event kosong dibiarkan agar designer tidak error
+        private void label2_Click(object sender, EventArgs e) { }
+        private void label4_Click(object sender, EventArgs e) { }
+        private void txtNoPC_TextChanged(object sender, EventArgs e) { }
+        private void cmbStatus_SelectedIndexChanged(object sender, EventArgs e) { }
+        private void button1_Click(object sender, EventArgs e) { }
+        private void btnTestInjection_Click(object sender, EventArgs e) { }
 
-            txtNoPC.DataBindings.Add("Text", bindingSource, "nomor_pc");
-            cmbTier.DataBindings.Add("Text", bindingSource, "nama_tier");
-            cmbStatus.DataBindings.Add("Text", bindingSource, "status");
+        private void btnDashboard_Click(object sender, EventArgs e)
+        {
+            Dashboard_Form dashboard = new Dashboard_Form();
+            // Gunakan ShowDialog agar form utama tidak bisa di-klik selama dashboard terbuka
+            dashboard.ShowDialog();
         }
 
-        private void btnTestInjection_Click(object sender, EventArgs e)
+        private void btnImportExcel_Click(object sender, EventArgs e)
         {
-            try
+            // 1. Buka jendela dialog untuk memilih file Excel
+            using (OpenFileDialog ofd = new OpenFileDialog() { Filter = "Excel Workbook|*.xlsx|Excel 97-2003|*.xls" })
             {
-                if (conn.State == ConnectionState.Closed) conn.Open();
-
-                string query = "UPDATE Master_PC SET status='HACKED' WHERE nomor_pc='" + txtNoPC.Text + "'";
-
-                SqlCommand cmd = new SqlCommand(query, conn);
-                int result = cmd.ExecuteNonQuery();
-                MessageBox.Show(result + " baris berhasil diubah!");
-                LoadData();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show(ex.Message);
-            }
-        }
-
-
-        private void btnReset_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                if (ofd.ShowDialog() == DialogResult.OK)
                 {
-                    conn.Open();
-                    // Menyalakan INSERT IDENTITY karena kolom id_pc (Auto-Increment)
-                    string query = @"
-                IF OBJECT_ID('dbo.Master_PC_Backup') IS NOT NULL
-                BEGIN
-                    DELETE FROM dbo.Master_PC;
-                    SET IDENTITY_INSERT dbo.Master_PC ON;
-                    INSERT INTO dbo.Master_PC (id_pc, id_tier, nomor_pc, status)
-                    SELECT id_pc, id_tier, nomor_pc, status FROM dbo.Master_PC_Backup;
-                    SET IDENTITY_INSERT dbo.Master_PC OFF;
-                END";
-
-                    using (SqlCommand cmd = new SqlCommand(query, conn))
+                    try
                     {
-                        cmd.ExecuteNonQuery();
+                        // 2. Baca file Excel yang dipilih menjadi FileStream
+                        using (var stream = File.Open(ofd.FileName, FileMode.Open, FileAccess.Read))
+                        {
+                            // 3. Terjemahkan Stream Excel menggunakan ExcelDataReader
+                            using (var reader = ExcelReaderFactory.CreateReader(stream))
+                            {
+                                // 4. Konversi seluruh isi sheet Excel menjadi bentuk DataTable C#
+                                var result = reader.AsDataSet(new ExcelDataSetConfiguration()
+                                {
+                                    ConfigureDataTable = (_) => new ExcelDataTableConfiguration() { UseHeaderRow = true }
+                                });
+
+                                // Ambil Sheet pertama (index 0)
+                                DataTable dtExcel = result.Tables[0];
+
+                                // 5. Kirim DataTable ke DAL untuk dieksekusi ke SQL Server
+                                int berhasil = dbLogic.ImportDataPCMassal(dtExcel);
+
+                                // 6. Notifikasi hasil dan segarkan tabel di layar
+                                MessageBox.Show(berhasil + " data PC baru berhasil diimpor dari Excel!", "Informasi", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                                LoadData();
+                            }
+                        }
+                    }
+                    catch (IOException)
+                    {
+                        // Error ini spesifik muncul jika file Excel-nya masih terbuka (sedang diedit) di aplikasi Microsoft Excel
+                        MessageBox.Show("Gagal memuat! Pastikan file Excel sedang tidak dibuka di aplikasi Microsoft Excel. Tutup file tersebut terlebih dahulu lalu coba lagi.", "Peringatan Akses", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    catch (Exception ex)
+                    {
+                        MessageBox.Show("Terjadi kesalahan sistem: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                 }
+            }
+        }
 
-                MessageBox.Show("Data berhasil direset dari tabel backup!");
-                LoadData();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Reset gagal: " + ex.Message);
-            }
+        private void btnRekapPenghasilan_Click(object sender, EventArgs e)
+        {
+            FormRekapPenghasilan rekapForm = new FormRekapPenghasilan();
+            rekapForm.ShowDialog();
         }
     }
 }

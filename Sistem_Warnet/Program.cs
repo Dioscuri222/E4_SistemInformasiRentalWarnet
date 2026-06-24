@@ -16,6 +16,8 @@ namespace Sistem_Warnet
         {
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
+
+            // Tetap mempertahankan form masuk bawaan proyek kelompok Anda
             Application.Run(new Login_Form());
         }
     }
