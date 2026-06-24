@@ -58,3 +58,68 @@ BEGIN
     END CATCH
 END
 GO
+
+
+SELECT * FROM Voucher_Sesi
+
+
+
+
+
+
+
+-- Untuk Cetak Struk CrystalReportViewer Operator
+CREATE PROCEDURE sp_CetakStruk
+    @kode_voucher VARCHAR(6)
+AS
+BEGIN
+    SELECT 
+        t.tgl_transaksi, 
+        t.durasi_jam, 
+        t.total_bayar,
+        v.kode_voucher, 
+        p.nomor_pc,
+        tr.nama_tier,
+        u.username AS nama_operator
+    FROM Transaksi_Pembelian t
+    JOIN Voucher_Sesi v ON t.id_transaksi = v.id_transaksi
+    JOIN Master_PC p ON v.id_pc = p.id_pc
+    JOIN Tier_PC tr ON t.id_tier = tr.id_tier
+    JOIN Pengguna_Staf u ON t.id_user = u.id_user
+    WHERE v.kode_voucher = @kode_voucher
+END
+GO
+
+-- Ada Alter jangan lupa di lihat
+USE DBWarnet
+-- Untuk melihat Pendapatan per Tier PC
+CREATE PROCEDURE sp_StatistikPendapatanTier
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    -- Menggunakan LEFT JOIN agar tier yang belum pernah laku tetap muncul dengan nilai 0
+    SELECT 
+        t.nama_tier, 
+        ISNULL(SUM(tp.total_bayar), 0) AS total_pendapatan,
+        COUNT(tp.id_transaksi) AS jumlah_transaksi
+    FROM Tier_PC t
+    LEFT JOIN Transaksi_Pembelian tp ON t.id_tier = tp.id_tier
+    GROUP BY t.nama_tier;
+END
+GO
+
+ALTER PROCEDURE sp_StatistikPendapatanTier
+AS
+BEGIN
+    SET NOCOUNT ON;
+    
+    SELECT 
+        t.nama_tier, 
+        ISNULL(SUM(tp.total_bayar), 0) AS total_pendapatan,
+        COUNT(tp.id_transaksi) AS jumlah_transaksi
+    FROM Tier_PC t WITH (NOLOCK)
+    LEFT JOIN Transaksi_Pembelian tp WITH (NOLOCK) ON t.id_tier = tp.id_tier
+    GROUP BY t.nama_tier;
+END
+GO

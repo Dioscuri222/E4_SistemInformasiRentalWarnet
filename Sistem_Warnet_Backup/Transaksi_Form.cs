@@ -1,0 +1,205 @@
+﻿using System;
+using System.Data;
+using System.Data.SqlClient;
+using System.Windows.Forms;
+
+namespace Sistem_Warnet
+{
+    public partial class Transaksi_Form : Form
+    {
+        private Staff currentOperator;
+        private int totalBayar = 0;
+        private int hargaPerJam = 0;
+        private int idTierTerpilih = 0; // Tambahan: Menyimpan ID Tier dari PC yang dipilih
+
+        DAL dbLogic = new DAL(); // Panggil class DAL
+
+        public Transaksi_Form(Staff kasir)
+        {
+            InitializeComponent();
+            this.currentOperator = kasir;
+        }
+
+        public Transaksi_Form()
+        {
+            InitializeComponent();
+        }
+
+        private void Transaksi_Form_Load(object sender, EventArgs e)
+        {
+            // Tampilkan nama operator
+            if (currentOperator != null)
+            {
+                lblOperator.Text = "Operator: " + currentOperator.Username;
+            }
+
+            txtKembalian.ReadOnly = true;
+            cmbTier.Enabled = false;
+
+            txtKembalian.Text = "Rp 0";
+            lblTotalBayar.Text = "Rp 0";
+
+            LoadDataPC();
+        }
+
+        private void LoadDataPC()
+        {
+            try
+            {
+                // Deklarasikan connection string dan SqlConnection secara lokal di sini
+                string connString = "Data Source=FASYALTP\\FASYALTP;Initial Catalog=DBWarnet;Integrated Security=True";
+
+                using (SqlConnection conn = new SqlConnection(connString))
+                {
+                    conn.Open();
+
+                    string query = @"
+                        SELECT p.id_pc, p.nomor_pc, t.id_tier, t.nama_tier, t.harga_per_jam
+                        FROM Master_PC p
+                        INNER JOIN Tier_PC t ON p.id_tier = t.id_tier
+                        WHERE p.status = 'Tersedia'";
+
+                    SqlCommand cmd = new SqlCommand(query, conn);
+                    SqlDataAdapter da = new SqlDataAdapter(cmd);
+                    DataTable dt = new DataTable();
+                    da.Fill(dt);
+
+                    cmbNoPC.DataSource = dt;
+                    cmbNoPC.DisplayMember = "nomor_pc";
+                    cmbNoPC.ValueMember = "id_pc";
+                }
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Gagal memuat data PC: " + ex.Message);
+            }
+        }
+
+        private void cmbNoPC_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            if (cmbNoPC.SelectedItem != null)
+            {
+                DataRowView row = cmbNoPC.SelectedItem as DataRowView;
+                if (row != null)
+                {
+                    cmbTier.Text = row["nama_tier"].ToString();
+                    hargaPerJam = Convert.ToInt32(row["harga_per_jam"]);
+                    idTierTerpilih = Convert.ToInt32(row["id_tier"]); // Simpan ID Tier
+
+                    HitungTotalBayar();
+                }
+            }
+        }
+
+        private void nudDurasiJam_ValueChanged(object sender, EventArgs e)
+        {
+            HitungTotalBayar();
+        }
+
+        private void HitungTotalBayar()
+        {
+            int durasiJam = Convert.ToInt32(nudDurasiJam.Value);
+
+            int durasiMenit = durasiJam * 60;
+            lblMenit.Text = durasiMenit.ToString() + " Menit";
+
+            totalBayar = durasiJam * hargaPerJam;
+            lblTotalBayar.Text = "Rp " + totalBayar.ToString("N0");
+
+            HitungKembalian();
+        }
+
+        private void txtUangTunai_TextChanged(object sender, EventArgs e)
+        {
+            HitungKembalian();
+        }
+
+        private void HitungKembalian()
+        {
+            if (int.TryParse(txtUangTunai.Text, out int uangTunai))
+            {
+                int kembalian = uangTunai - totalBayar;
+
+                if (kembalian < 0)
+                {
+                    txtKembalian.Text = "Uang Kurang!";
+                }
+                else
+                {
+                    txtKembalian.Text = "Rp " + kembalian.ToString("N0");
+                }
+            }
+            else
+            {
+                txtKembalian.Text = "Rp 0";
+            }
+        }
+
+        // TOMBOL BATAL / KEMBALI
+        private void button3_Click(object sender, EventArgs e)
+        {
+            Operator_Form opForm = new Operator_Form(currentOperator);
+            opForm.Show();
+            this.Close();
+        }
+
+        // TOMBOL CETAK PEMBAYARAN (PROSES TRANSAKSI)
+        private void button2_Click(object sender, EventArgs e)
+        {
+            // 1. Validasi Input
+            if (cmbNoPC.SelectedValue == null)
+            {
+                MessageBox.Show("Pilih PC terlebih dahulu!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+            if (totalBayar == 0)
+            {
+                MessageBox.Show("Durasi atau Harga tidak valid!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Validasi uang bayar
+            if (int.TryParse(txtUangTunai.Text, out int uangTunai))
+            {
+                if (uangTunai < totalBayar)
+                {
+                    MessageBox.Show("Uang pelanggan kurang!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+            }
+            else
+            {
+                MessageBox.Show("Masukkan jumlah uang tunai yang valid!", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // 2. Eksekusi Pembelian
+            try
+            {
+                int idPc = Convert.ToInt32(cmbNoPC.SelectedValue);
+                int durasiJam = Convert.ToInt32(nudDurasiJam.Value);
+                string kodeVoucherBaru;
+
+                // Panggil method DAL yang baru
+                dbLogic.ProsesPembelianVoucher(currentOperator.IdUser, idTierTerpilih, idPc, durasiJam, totalBayar, out kodeVoucherBaru);
+
+                MessageBox.Show($"Transaksi Berhasil!\n\nKode Login Pelanggan: {kodeVoucherBaru}", "Sukses", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                // Refresh Form agar PC yang barusan dibeli hilang dari ComboBox
+                txtUangTunai.Clear();
+                nudDurasiJam.Value = 1;
+                LoadDataPC();
+
+                // TODO: Panggil Form Crystal Report Struk Anda di bawah sini
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show(ex.Message, "Error Database", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        private void lblWaktu_Click(object sender, EventArgs e) { }
+        private void txtKembalian_TextChanged(object sender, EventArgs e) { }
+        private void cmbTier_SelectedIndexChanged(object sender, EventArgs e) { }
+    }
+}
