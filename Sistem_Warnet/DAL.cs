@@ -13,7 +13,6 @@ namespace Sistem_Warnet
         private string connectionString = "Data Source=.\\FASYALTP;Initial Catalog=DBWarnet;Integrated Security=True";
         private SqlConnection conn;
 
-        // TAMBAHAN WAJIB: Konstruktor untuk menginisialisasi conn
         public DAL()
         {
             conn = new SqlConnection(connectionString);
