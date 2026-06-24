@@ -10,7 +10,7 @@ namespace Sistem_Warnet
 {
     internal class DAL
     {
-        private string connectionString = "Data Source=DESKTOP-8TS9IRD\\ZAKIBN;Initial Catalog=DBWarnet;Integrated Security=True";
+        private string connectionString = "Data Source=.\\FASYALTP;Initial Catalog=DBWarnet;Integrated Security=True";
         private SqlConnection conn;
 
         // TAMBAHAN WAJIB: Konstruktor untuk menginisialisasi conn

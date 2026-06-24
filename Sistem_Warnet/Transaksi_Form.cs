@@ -135,16 +135,7 @@ namespace Sistem_Warnet
 
         private void btnResertPCTest_Click(object sender, EventArgs e)
         {
-            try
-            {
-                dbLogic.ResetStatusPCSemuaTersedia();
-                MessageBox.Show("Berhasil! Semua PC sekarang statusnya kembali 'Tersedia'.", "Debugging");
-                LoadDataPC();
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Gagal reset PC: " + ex.Message);
-            }
+
         }
 
         private void button3_Click(object sender, EventArgs e)
