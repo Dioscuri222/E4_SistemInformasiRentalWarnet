@@ -3,7 +3,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
-using System.IO;
 
 namespace Sistem_Warnet
 {
@@ -15,23 +14,10 @@ namespace Sistem_Warnet
         [STAThread]
         static void Main()
         {
-            // Tentukan lokasi file config
-            string configPath = AppDomain.CurrentDomain.BaseDirectory + "config.txt";
+            Application.EnableVisualStyles();
+            Application.SetCompatibleTextRenderingDefault(false);
 
-            // Jika file config.txt BELUM ADA, munculkan Form Setup
-            if (!File.Exists(configPath))
-            {
-                Setup setup = new Setup();
-
-                // Tahan aplikasi sampai pengguna menekan "Simpan & Lanjut" (DialogResult.OK)
-                if (setup.ShowDialog() != DialogResult.OK)
-                {
-                    // Jika pengguna malah menekan tombol silang (X) pada pop-up, matikan seluruh aplikasi
-                    return;
-                }
-            }
-
-            // Jika config.txt sudah ada (atau baru saja dibuat oleh FormSetup), lanjut ke Login
+            // Tetap mempertahankan form masuk bawaan proyek kelompok Anda
             Application.Run(new Login_Form());
         }
     }

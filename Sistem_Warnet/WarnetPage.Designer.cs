@@ -76,7 +76,7 @@ namespace Sistem_Warnet
             this.label1.Location = new System.Drawing.Point(29, 33);
             this.label1.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(38, 13);
+            this.label1.Size = new System.Drawing.Size(67, 28);
             this.label1.TabIndex = 0;
             this.label1.Text = "No PC";
             // 
@@ -86,7 +86,7 @@ namespace Sistem_Warnet
             this.label2.Location = new System.Drawing.Point(29, 62);
             this.label2.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(25, 13);
+            this.label2.Size = new System.Drawing.Size(44, 28);
             this.label2.TabIndex = 1;
             this.label2.Text = "Tier";
             this.label2.Click += new System.EventHandler(this.label2_Click);
@@ -97,7 +97,7 @@ namespace Sistem_Warnet
             this.label3.Location = new System.Drawing.Point(29, 89);
             this.label3.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(37, 13);
+            this.label3.Size = new System.Drawing.Size(65, 28);
             this.label3.TabIndex = 2;
             this.label3.Text = "Status";
             // 
@@ -106,7 +106,7 @@ namespace Sistem_Warnet
             this.txtNoPC.Location = new System.Drawing.Point(82, 31);
             this.txtNoPC.Margin = new System.Windows.Forms.Padding(2);
             this.txtNoPC.Name = "txtNoPC";
-            this.txtNoPC.Size = new System.Drawing.Size(92, 20);
+            this.txtNoPC.Size = new System.Drawing.Size(92, 34);
             this.txtNoPC.TabIndex = 3;
             this.txtNoPC.TextChanged += new System.EventHandler(this.txtNoPC_TextChanged);
             // 
@@ -116,7 +116,7 @@ namespace Sistem_Warnet
             this.cmbTier.Location = new System.Drawing.Point(82, 59);
             this.cmbTier.Margin = new System.Windows.Forms.Padding(2);
             this.cmbTier.Name = "cmbTier";
-            this.cmbTier.Size = new System.Drawing.Size(92, 21);
+            this.cmbTier.Size = new System.Drawing.Size(92, 36);
             this.cmbTier.TabIndex = 4;
             this.cmbTier.SelectedIndexChanged += new System.EventHandler(this.cmbTier_SelectedIndexChanged);
             // 
@@ -126,7 +126,7 @@ namespace Sistem_Warnet
             this.cmbStatus.Location = new System.Drawing.Point(82, 89);
             this.cmbStatus.Margin = new System.Windows.Forms.Padding(2);
             this.cmbStatus.Name = "cmbStatus";
-            this.cmbStatus.Size = new System.Drawing.Size(92, 21);
+            this.cmbStatus.Size = new System.Drawing.Size(92, 36);
             this.cmbStatus.TabIndex = 5;
             this.cmbStatus.SelectedIndexChanged += new System.EventHandler(this.cmbStatus_SelectedIndexChanged);
             // 
@@ -168,7 +168,7 @@ namespace Sistem_Warnet
             this.txtPencarian.Location = new System.Drawing.Point(356, 49);
             this.txtPencarian.Margin = new System.Windows.Forms.Padding(2);
             this.txtPencarian.Name = "txtPencarian";
-            this.txtPencarian.Size = new System.Drawing.Size(128, 20);
+            this.txtPencarian.Size = new System.Drawing.Size(128, 34);
             this.txtPencarian.TabIndex = 9;
             // 
             // label4
@@ -177,7 +177,7 @@ namespace Sistem_Warnet
             this.label4.Location = new System.Drawing.Point(356, 31);
             this.label4.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(55, 13);
+            this.label4.Size = new System.Drawing.Size(95, 28);
             this.label4.TabIndex = 10;
             this.label4.Text = "Pencarian";
             this.label4.Click += new System.EventHandler(this.label4_Click);
@@ -211,7 +211,7 @@ namespace Sistem_Warnet
             this.lblTotal.Location = new System.Drawing.Point(22, 301);
             this.lblTotal.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblTotal.Name = "lblTotal";
-            this.lblTotal.Size = new System.Drawing.Size(100, 13);
+            this.lblTotal.Size = new System.Drawing.Size(173, 28);
             this.lblTotal.TabIndex = 14;
             this.lblTotal.Text = "Total PC Terdaftar: ";
             // 
@@ -279,7 +279,7 @@ namespace Sistem_Warnet
             this.bindingNavigator1.MovePreviousItem = this.bindingNavigatorMovePreviousItem;
             this.bindingNavigator1.Name = "bindingNavigator1";
             this.bindingNavigator1.PositionItem = this.bindingNavigatorPositionItem;
-            this.bindingNavigator1.Size = new System.Drawing.Size(600, 27);
+            this.bindingNavigator1.Size = new System.Drawing.Size(600, 30);
             this.bindingNavigator1.TabIndex = 18;
             this.bindingNavigator1.Text = "bindingNavigator1";
             // 
@@ -289,13 +289,13 @@ namespace Sistem_Warnet
             this.bindingNavigatorAddNewItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorAddNewItem.Image")));
             this.bindingNavigatorAddNewItem.Name = "bindingNavigatorAddNewItem";
             this.bindingNavigatorAddNewItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(24, 24);
+            this.bindingNavigatorAddNewItem.Size = new System.Drawing.Size(34, 25);
             this.bindingNavigatorAddNewItem.Text = "Add new";
             // 
             // bindingNavigatorCountItem
             // 
             this.bindingNavigatorCountItem.Name = "bindingNavigatorCountItem";
-            this.bindingNavigatorCountItem.Size = new System.Drawing.Size(35, 24);
+            this.bindingNavigatorCountItem.Size = new System.Drawing.Size(54, 25);
             this.bindingNavigatorCountItem.Text = "of {0}";
             this.bindingNavigatorCountItem.ToolTipText = "Total number of items";
             // 
@@ -305,7 +305,7 @@ namespace Sistem_Warnet
             this.bindingNavigatorDeleteItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorDeleteItem.Image")));
             this.bindingNavigatorDeleteItem.Name = "bindingNavigatorDeleteItem";
             this.bindingNavigatorDeleteItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorDeleteItem.Size = new System.Drawing.Size(24, 24);
+            this.bindingNavigatorDeleteItem.Size = new System.Drawing.Size(34, 25);
             this.bindingNavigatorDeleteItem.Text = "Delete";
             // 
             // bindingNavigatorMoveFirstItem
@@ -314,7 +314,7 @@ namespace Sistem_Warnet
             this.bindingNavigatorMoveFirstItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMoveFirstItem.Image")));
             this.bindingNavigatorMoveFirstItem.Name = "bindingNavigatorMoveFirstItem";
             this.bindingNavigatorMoveFirstItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorMoveFirstItem.Size = new System.Drawing.Size(24, 24);
+            this.bindingNavigatorMoveFirstItem.Size = new System.Drawing.Size(34, 25);
             this.bindingNavigatorMoveFirstItem.Text = "Move first";
             // 
             // bindingNavigatorMovePreviousItem
@@ -323,13 +323,13 @@ namespace Sistem_Warnet
             this.bindingNavigatorMovePreviousItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMovePreviousItem.Image")));
             this.bindingNavigatorMovePreviousItem.Name = "bindingNavigatorMovePreviousItem";
             this.bindingNavigatorMovePreviousItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorMovePreviousItem.Size = new System.Drawing.Size(24, 24);
+            this.bindingNavigatorMovePreviousItem.Size = new System.Drawing.Size(34, 25);
             this.bindingNavigatorMovePreviousItem.Text = "Move previous";
             // 
             // bindingNavigatorSeparator
             // 
             this.bindingNavigatorSeparator.Name = "bindingNavigatorSeparator";
-            this.bindingNavigatorSeparator.Size = new System.Drawing.Size(6, 27);
+            this.bindingNavigatorSeparator.Size = new System.Drawing.Size(6, 30);
             // 
             // bindingNavigatorPositionItem
             // 
@@ -344,7 +344,7 @@ namespace Sistem_Warnet
             // bindingNavigatorSeparator1
             // 
             this.bindingNavigatorSeparator1.Name = "bindingNavigatorSeparator1";
-            this.bindingNavigatorSeparator1.Size = new System.Drawing.Size(6, 27);
+            this.bindingNavigatorSeparator1.Size = new System.Drawing.Size(6, 30);
             // 
             // bindingNavigatorMoveNextItem
             // 
@@ -352,7 +352,7 @@ namespace Sistem_Warnet
             this.bindingNavigatorMoveNextItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMoveNextItem.Image")));
             this.bindingNavigatorMoveNextItem.Name = "bindingNavigatorMoveNextItem";
             this.bindingNavigatorMoveNextItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorMoveNextItem.Size = new System.Drawing.Size(24, 24);
+            this.bindingNavigatorMoveNextItem.Size = new System.Drawing.Size(34, 25);
             this.bindingNavigatorMoveNextItem.Text = "Move next";
             // 
             // bindingNavigatorMoveLastItem
@@ -361,13 +361,13 @@ namespace Sistem_Warnet
             this.bindingNavigatorMoveLastItem.Image = ((System.Drawing.Image)(resources.GetObject("bindingNavigatorMoveLastItem.Image")));
             this.bindingNavigatorMoveLastItem.Name = "bindingNavigatorMoveLastItem";
             this.bindingNavigatorMoveLastItem.RightToLeftAutoMirrorImage = true;
-            this.bindingNavigatorMoveLastItem.Size = new System.Drawing.Size(24, 24);
+            this.bindingNavigatorMoveLastItem.Size = new System.Drawing.Size(34, 25);
             this.bindingNavigatorMoveLastItem.Text = "Move last";
             // 
             // bindingNavigatorSeparator2
             // 
             this.bindingNavigatorSeparator2.Name = "bindingNavigatorSeparator2";
-            this.bindingNavigatorSeparator2.Size = new System.Drawing.Size(6, 27);
+            this.bindingNavigatorSeparator2.Size = new System.Drawing.Size(6, 30);
             // 
             // btnTestInjection
             // 
@@ -435,7 +435,7 @@ namespace Sistem_Warnet
             // 
             // Warnet_Form
             // 
-            this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
+            this.AutoScaleDimensions = new System.Drawing.SizeF(11F, 28F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(15)))), ((int)(((byte)(23)))), ((int)(((byte)(42)))));
             this.ClientSize = new System.Drawing.Size(600, 366);

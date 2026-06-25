@@ -1,21 +1,20 @@
 using System;
 using System.Collections.Generic;
+using System.Configuration; // WAJIB DITAMBAHKAN
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace Sistem_Warnet
 {
     internal class DAL
     {
-        private string connectionString = "Data Source=.\\FASYALTP;Initial Catalog=DBWarnet;Integrated Security=True";
-        private SqlConnection conn;
+        // Mengambil string koneksi secara otomatis dari tag <connectionStrings> di App.config
+        private string connectionString = ConfigurationManager.ConnectionStrings["KoneksiWarnet"].ConnectionString;
 
+        // Konstruktor kosong karena DAL sekarang bersifat Stateless
         public DAL()
         {
-            conn = new SqlConnection(connectionString);
         }
 
         // ==========================================
@@ -26,7 +25,6 @@ namespace Sistem_Warnet
             DataTable dt = new DataTable();
             using (SqlConnection localConn = new SqlConnection(connectionString))
             {
-                // Menggunakan view vw_DataPC
                 SqlCommand cmd = new SqlCommand("SELECT * FROM vw_DataPC", localConn);
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
@@ -39,7 +37,6 @@ namespace Sistem_Warnet
             DataTable dt = new DataTable();
             using (SqlConnection localConn = new SqlConnection(connectionString))
             {
-                // Menggunakan SP sp_GetTierComboBox
                 SqlCommand cmd = new SqlCommand("sp_GetTierComboBox", localConn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
@@ -53,7 +50,6 @@ namespace Sistem_Warnet
             DataTable dt = new DataTable();
             using (SqlConnection localConn = new SqlConnection(connectionString))
             {
-                // Menggunakan SP sp_SearchMasterPC
                 SqlCommand cmd = new SqlCommand("sp_SearchMasterPC", localConn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@search", "%" + keyword + "%");
@@ -67,7 +63,6 @@ namespace Sistem_Warnet
         {
             using (SqlConnection localConn = new SqlConnection(connectionString))
             {
-                // Menggunakan SP sp_InsertMasterPC
                 SqlCommand cmd = new SqlCommand("sp_InsertMasterPC", localConn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@tier", idTier);
@@ -83,7 +78,6 @@ namespace Sistem_Warnet
         {
             using (SqlConnection localConn = new SqlConnection(connectionString))
             {
-                // Menggunakan SP sp_UpdateMasterPC
                 SqlCommand cmd = new SqlCommand("sp_UpdateMasterPC", localConn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@tier", idTier);
@@ -100,7 +94,6 @@ namespace Sistem_Warnet
         {
             using (SqlConnection localConn = new SqlConnection(connectionString))
             {
-                // Menggunakan SP sp_DeleteMasterPC
                 SqlCommand cmd = new SqlCommand("sp_DeleteMasterPC", localConn);
                 cmd.CommandType = CommandType.StoredProcedure;
                 cmd.Parameters.AddWithValue("@id", idPc);
@@ -114,7 +107,6 @@ namespace Sistem_Warnet
         {
             using (SqlConnection localConn = new SqlConnection(connectionString))
             {
-                // Menggunakan SP sp_CountMasterPC_Output
                 SqlCommand cmd = new SqlCommand("sp_CountMasterPC_Output", localConn);
                 cmd.CommandType = CommandType.StoredProcedure;
 
@@ -164,7 +156,7 @@ namespace Sistem_Warnet
                     loggedInUser.Role = reader["role"].ToString();
                     return loggedInUser;
                 }
-                return null; // Mengembalikan null jika kombinasi username/password salah
+                return null;
             }
         }
 
@@ -198,16 +190,12 @@ namespace Sistem_Warnet
             Random random = new Random();
             kodeVoucherAwal = new string(Enumerable.Repeat(chars, 6).Select(s => s[random.Next(s.Length)]).ToArray());
 
-            try
+            // 2. Eksekusi Stored Procedure Transaksi
+            using (SqlConnection localConn = new SqlConnection(connectionString))
             {
-                // 2. Buka Koneksi
-                if (conn.State == System.Data.ConnectionState.Closed) conn.Open();
+                SqlCommand cmd = new SqlCommand("sp_ProsesTransaksiKasir", localConn);
+                cmd.CommandType = CommandType.StoredProcedure;
 
-                // 3. Panggil Stored Procedure Transaksi yang baru
-                SqlCommand cmd = new SqlCommand("sp_ProsesTransaksiKasir", conn);
-                cmd.CommandType = System.Data.CommandType.StoredProcedure;
-
-                // Lempar parameter ke dalam SP
                 cmd.Parameters.AddWithValue("@id_user", idUser);
                 cmd.Parameters.AddWithValue("@id_tier", idTier);
                 cmd.Parameters.AddWithValue("@id_pc", idPc);
@@ -215,17 +203,8 @@ namespace Sistem_Warnet
                 cmd.Parameters.AddWithValue("@total_bayar", totalBayar);
                 cmd.Parameters.AddWithValue("@kode_voucher", kodeVoucherAwal);
 
-                // Eksekusi
+                localConn.Open();
                 cmd.ExecuteNonQuery();
-            }
-            catch (Exception ex)
-            {
-                // Tangkap pesan error dari RAISERROR di SQL Server
-                throw new Exception("Transaksi Gagal: " + ex.Message);
-            }
-            finally
-            {
-                if (conn.State == System.Data.ConnectionState.Open) conn.Close();
             }
         }
 
@@ -244,21 +223,19 @@ namespace Sistem_Warnet
 
         public DataTable CetakStrukKasir(string kodeVoucher)
         {
-            if (conn.State == System.Data.ConnectionState.Closed) conn.Open();
-
-            SqlCommand cmd = new SqlCommand("sp_CetakStruk", conn);
-            cmd.CommandType = System.Data.CommandType.StoredProcedure;
-            cmd.Parameters.AddWithValue("@kode_voucher", kodeVoucher);
-
-            SqlDataAdapter da = new SqlDataAdapter(cmd);
             DataTable dtStruk = new DataTable();
-
             // KUNCI UTAMA: Beri nama tabel agar dikenali oleh Crystal Reports
             dtStruk.TableName = "sp_CetakStruk;1";
 
-            da.Fill(dtStruk);
+            using (SqlConnection localConn = new SqlConnection(connectionString))
+            {
+                SqlCommand cmd = new SqlCommand("sp_CetakStruk", localConn);
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.AddWithValue("@kode_voucher", kodeVoucher);
 
-            conn.Close();
+                SqlDataAdapter da = new SqlDataAdapter(cmd);
+                da.Fill(dtStruk);
+            }
             return dtStruk;
         }
 
@@ -269,23 +246,18 @@ namespace Sistem_Warnet
             {
                 localConn.Open();
 
-                // Looping membaca setiap baris data dari Excel
                 foreach (DataRow row in dtExcel.Rows)
                 {
                     try
                     {
-                        // Menarik data berdasarkan nama header kolom Excel
                         string nomor = row["Nomor PC"].ToString().ToUpper().Trim();
                         string tier = row["Tier"].ToString().Trim();
                         string status = row["Status"].ToString().Trim();
 
-                        // Validasi: Lewati jika baris kosong atau format salah
                         if (string.IsNullOrEmpty(nomor)) continue;
 
-                        // Tentukan ID Tier (1 = Reguler, 2 = VIP) sesuai database Anda
                         int idTier = (tier.ToUpper() == "VIP") ? 2 : 1;
 
-                        // Gunakan SP Insert yang sudah ada
                         SqlCommand cmd = new SqlCommand("sp_InsertMasterPC", localConn);
                         cmd.CommandType = CommandType.StoredProcedure;
                         cmd.Parameters.AddWithValue("@tier", idTier);
@@ -297,8 +269,6 @@ namespace Sistem_Warnet
                     }
                     catch
                     {
-                        // Jika gagal (misal duplikat nomor PC / validasi constraint gagal), 
-                        // program akan melewati baris ini dan melanjutkan ke baris berikutnya
                         continue;
                     }
                 }
@@ -318,7 +288,6 @@ namespace Sistem_Warnet
                 SqlDataAdapter da = new SqlDataAdapter(cmd);
                 da.Fill(dt);
             }
-            // Kembalikan baris pertama jika ditemukan, kembalikan null jika gagal
             return dt.Rows.Count > 0 ? dt.Rows[0] : null;
         }
 

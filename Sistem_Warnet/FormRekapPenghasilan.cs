@@ -118,7 +118,10 @@ namespace Sistem_Warnet
             }
             catch (Exception ex)
             {
-                MessageBox.Show("Gagal mencetak rekap: " + ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                // KITA BONGKAR ISI PERUT ERRORNYA:
+                string errorAsli = ex.InnerException != null ? ex.InnerException.Message : ex.Message;
+
+                MessageBox.Show("Penyebab Asli CR meledak:\n\n" + errorAsli, "Detektif Error", MessageBoxButtons.OK, MessageBoxIcon.Hand);
             }
         }
 
