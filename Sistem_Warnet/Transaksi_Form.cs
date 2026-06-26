@@ -3,7 +3,6 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Windows.Forms;
 
-
 namespace Sistem_Warnet
 {
     public partial class Transaksi_Form : Form
@@ -108,9 +107,17 @@ namespace Sistem_Warnet
             }
         }
 
+        // --- REVISI: Penangkapan error dan pengiriman nominal uang tunai ---
         private void button2_Click(object sender, EventArgs e)
         {
             if (cmbNoPC.SelectedValue == null || totalBayar == 0) return;
+
+            // Pastikan operator mengisi nominal uang tunai yang valid
+            if (!int.TryParse(txtUangTunai.Text, out int uangTunaiBayar))
+            {
+                MessageBox.Show("Silakan masukkan nominal uang tunai yang valid terlebih dahulu.", "Peringatan", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
             try
             {
@@ -118,8 +125,10 @@ namespace Sistem_Warnet
                 int durasiJam = Convert.ToInt32(nudDurasiJam.Value);
                 string kodeVoucherBaru;
 
-                dbLogic.ProsesPembelianVoucher(currentOperator.IdUser, idTierTerpilih, idPc, durasiJam, totalBayar, out kodeVoucherBaru);
+                // Mengirimkan parameter uangTunaiBayar ke DAL
+                dbLogic.ProsesPembelianVoucher(currentOperator.IdUser, idTierTerpilih, idPc, durasiJam, totalBayar, uangTunaiBayar, out kodeVoucherBaru);
 
+                // Baris pemanggilan form struk ini hanya akan dieksekusi jika fungsi di atas sukses tanpa error
                 FormStrukKasir formStruk = new FormStrukKasir(kodeVoucherBaru);
                 formStruk.ShowDialog();
 
@@ -127,9 +136,14 @@ namespace Sistem_Warnet
                 nudDurasiJam.Value = 1;
                 LoadDataPC();
             }
+            catch (SqlException ex)
+            {
+                // Menangkap pesan RAISERROR ("TRANSAKSI DITOLAK: Uang tunai kurang!") dari database
+                MessageBox.Show(ex.Message, "Transaksi Gagal", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
             catch (Exception ex)
             {
-                MessageBox.Show(ex.Message, "Error Database", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show(ex.Message, "Error Sistem", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

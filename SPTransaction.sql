@@ -123,3 +123,84 @@ BEGIN
     GROUP BY t.nama_tier;
 END
 GO
+
+
+
+USE DBWarnet;
+GO
+
+ALTER PROCEDURE sp_ProsesTransaksiKasir
+    @id_user INT,
+    @id_tier INT,
+    @id_pc INT,
+    @durasi_jam INT,
+    @total_bayar INT,
+    @uang_bayar INT, -- <--- REVISI 1: PARAMETER BARU UNTUK MENERIMA UANG TUNAI
+    @kode_voucher VARCHAR(20)
+AS
+BEGIN
+    -- Matikan pesan affected rows demi performa
+    SET NOCOUNT ON;
+
+    BEGIN TRY
+        -- MULAI TRANSAKSI
+        BEGIN TRANSACTION;
+
+        -- =====================================================================
+        -- REVISI 1 & 2: VALIDASI MUTLAK UANG TUNAI
+        -- =====================================================================
+        IF (@uang_bayar < @total_bayar)
+        BEGIN
+            -- Melempar error dengan Severity 16 untuk otomatis melompat ke blok CATCH
+            RAISERROR('TRANSAKSI DITOLAK: Uang tunai yang dibayarkan kurang! Total biaya: %d, Uang Tunai: %d.', 16, 1, @total_bayar, @uang_bayar);
+        END
+
+        -- Validasi status ketersediaan PC sejenak (UPDLOCK)
+        DECLARE @statusPC VARCHAR(20);
+        SELECT @statusPC = status FROM Master_PC WITH (UPDLOCK) WHERE id_pc = @id_pc;
+
+        IF (@statusPC <> 'Tersedia')
+        BEGIN
+            RAISERROR('TRANSAKSI BATAL: Komputer tersebut sudah digunakan atau maintenance.', 16, 1);
+        END
+
+        -- [PROSES A] Insert Transaksi Pembelian
+        DECLARE @new_id_transaksi INT;
+        INSERT INTO Transaksi_Pembelian (id_user, id_tier, tgl_transaksi, durasi_jam, total_bayar)
+        VALUES (@id_user, @id_tier, GETDATE(), @durasi_jam, @total_bayar);
+
+        SET @new_id_transaksi = SCOPE_IDENTITY();
+
+        -- [PROSES B] Insert Voucher Sesi
+        DECLARE @sisa_menit INT = @durasi_jam * 60;
+        INSERT INTO Voucher_Sesi (kode_voucher, id_transaksi, id_pc, waktu_mulai, sisa_waktu_menit, status_sesi)
+        VALUES (@kode_voucher, @new_id_transaksi, @id_pc, GETDATE(), @sisa_menit, 'Aktif');
+
+        -- [PROSES C] Kunci Bilik PC
+        UPDATE Master_PC 
+        SET status = 'Digunakan' 
+        WHERE id_pc = @id_pc;
+
+        -- JIKA BERHASIL SAMPAI DI SINI, SAHKAN DATA KE TABEL
+        COMMIT TRANSACTION;
+
+    END TRY
+    BEGIN CATCH
+        -- =====================================================================
+        -- REVISI 2: ROLLBACK AUTOMATIC JIKA SEVERITY DI ATAS MEMICU ERROR
+        -- =====================================================================
+        IF @@TRANCOUNT > 0
+        BEGIN
+            -- Membatalkan seluruh INSERT dan UPDATE status PC di atas tanpa sisa
+            ROLLBACK TRANSACTION;
+        END
+
+        -- Lempar pesan error asli ke aplikasi C# agar ditangkap MessageBox
+        DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
+        DECLARE @ErrorSeverity INT = ERROR_SEVERITY();
+        DECLARE @ErrorState INT = ERROR_STATE();
+
+        RAISERROR (@ErrorMessage, @ErrorSeverity, @ErrorState);
+    END CATCH
+END
+GO

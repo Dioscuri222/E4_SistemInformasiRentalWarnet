@@ -1,6 +1,6 @@
 using System;
 using System.Collections.Generic;
-using System.Configuration; // WAJIB DITAMBAHKAN
+using System.Configuration;
 using System.Data;
 using System.Data.SqlClient;
 using System.Linq;
@@ -9,17 +9,12 @@ namespace Sistem_Warnet
 {
     internal class DAL
     {
-        // Mengambil string koneksi secara otomatis dari tag <connectionStrings> di App.config
         private string connectionString = ConfigurationManager.ConnectionStrings["KoneksiWarnet"].ConnectionString;
 
-        // Konstruktor kosong karena DAL sekarang bersifat Stateless
         public DAL()
         {
         }
 
-        // ==========================================
-        // KUMPULAN FUNGSI CRUD UNTUK MASTER PC
-        // ==========================================
         public DataTable GetAllMasterPC()
         {
             DataTable dt = new DataTable();
@@ -132,10 +127,6 @@ namespace Sistem_Warnet
             }
         }
 
-        // ==========================================
-        // FUNGSI UNTUK LOGIN & TRANSAKSI KASIR
-        // ==========================================
-
         public Staff CekLogin(string username, string password)
         {
             using (SqlConnection localConn = new SqlConnection(connectionString))
@@ -183,14 +174,13 @@ namespace Sistem_Warnet
             }
         }
 
-        public void ProsesPembelianVoucher(int idUser, int idTier, int idPc, int durasiJam, int totalBayar, out string kodeVoucherAwal)
+        // --- REVISI: Penambahan parameter int uangBayar ---
+        public void ProsesPembelianVoucher(int idUser, int idTier, int idPc, int durasiJam, int totalBayar, int uangBayar, out string kodeVoucherAwal)
         {
-            // 1. Generate Kode Voucher Acak (6 Karakter)
             string chars = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789";
             Random random = new Random();
             kodeVoucherAwal = new string(Enumerable.Repeat(chars, 6).Select(s => s[random.Next(s.Length)]).ToArray());
 
-            // 2. Eksekusi Stored Procedure Transaksi
             using (SqlConnection localConn = new SqlConnection(connectionString))
             {
                 SqlCommand cmd = new SqlCommand("sp_ProsesTransaksiKasir", localConn);
@@ -201,6 +191,7 @@ namespace Sistem_Warnet
                 cmd.Parameters.AddWithValue("@id_pc", idPc);
                 cmd.Parameters.AddWithValue("@durasi_jam", durasiJam);
                 cmd.Parameters.AddWithValue("@total_bayar", totalBayar);
+                cmd.Parameters.AddWithValue("@uang_bayar", uangBayar); // Parameter baru dikirim ke SQL
                 cmd.Parameters.AddWithValue("@kode_voucher", kodeVoucherAwal);
 
                 localConn.Open();
@@ -224,7 +215,6 @@ namespace Sistem_Warnet
         public DataTable CetakStrukKasir(string kodeVoucher)
         {
             DataTable dtStruk = new DataTable();
-            // KUNCI UTAMA: Beri nama tabel agar dikenali oleh Crystal Reports
             dtStruk.TableName = "sp_CetakStruk;1";
 
             using (SqlConnection localConn = new SqlConnection(connectionString))
